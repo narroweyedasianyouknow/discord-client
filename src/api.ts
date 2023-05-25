@@ -1,5 +1,5 @@
 import { IChat } from "./components/ChatsList/chat";
-import { IProfile } from "./store/messages";
+import { IMessage, IProfile } from "./interfaces";
 
 type useRequestType = <T>(
   method: string,
@@ -50,6 +50,13 @@ class MessageAPI {
   }) {
     return this.#request<{ response: boolean }>("POST", "message", props);
   }
+  getMessages(props: { id: string }) {
+    return this.#request<{ response: IMessage[] }>(
+      "POST",
+      "message/get",
+      props
+    );
+  }
 }
 class ChatsAPI {
   #request: useRequestType;
@@ -66,7 +73,11 @@ class ProfileAPI {
     this.#request = arg.useRequest;
   }
   get() {
-    return this.#request<IProfile>("GET", "profile");
+    return this.#request<
+      IProfile & {
+        chats: IChat[];
+      }
+    >("GET", "profile");
   }
 }
 export default API;

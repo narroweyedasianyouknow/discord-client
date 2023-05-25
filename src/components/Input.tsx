@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { useInputStore } from "../store/input";
 import { uuidv4 } from "../socketEventListener";
 import API from "../api";
 import { Send } from "@mui/icons-material";
 import { useAppSelector } from "../store";
+import { storeSelector } from "../store/storeSelector";
 
 const Form = styled.form`
   width: 100%;
@@ -51,20 +51,21 @@ const Submit = styled.button`
     color: #ffffff;
   }
 `;
+const { getActiveChat } = storeSelector;
 const InputForm = () => {
-  const chat = useAppSelector((store) => store.store.activeChat);
-  const { setValue, store } = useInputStore();
+  const chat = useAppSelector(getActiveChat);
+  const [value, setValue] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (store.length > 0 && chat) {
+    if (value.length > 0 && chat) {
       new API().message().addMessage({
         id: uuidv4(),
         subject_id: chat,
-        text_content: store,
+        text_content: value,
         ts: +new Date(),
       });
       setValue("");
@@ -77,7 +78,7 @@ const InputForm = () => {
           <Input
             disabled={!chat}
             placeholder="Message"
-            value={store}
+            value={value}
             onChange={handleChange}
           />
         </div>

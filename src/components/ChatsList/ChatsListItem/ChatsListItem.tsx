@@ -3,8 +3,9 @@ import { chatsSelector } from "../chatsSelector";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { EntityId } from "@reduxjs/toolkit";
 import Avatar from "boring-avatars";
-import { setActiveChat } from "../../../mainStore";
+import { setActiveChat } from "../../../store/storeSlice";
 import { useCallback } from "react";
+import { fetchMessagesList } from "../../messagesStorage";
 
 const { getChatById } = chatsSelector;
 const ListItemWrapper = styled.div<{ $active: boolean }>`
@@ -12,7 +13,8 @@ const ListItemWrapper = styled.div<{ $active: boolean }>`
 
   height: fit-content;
   padding: 5px 10px;
-  background-color: ${(props) => (props.$active ? "#2d2d2d" : "#252525")};
+  background-color: ${(props) =>
+    props.$active ? "var(--bg-body-hover)" : "var(--bg-body)"};
   border-radius: 8px;
   width: 100%;
   cursor: pointer;
@@ -28,6 +30,7 @@ const ChatsListItem = (props: { id: EntityId; active?: string }) => {
   const dispatch = useAppDispatch();
   const handleSelectChat = useCallback(() => {
     dispatch(setActiveChat(`${id}`));
+    dispatch(fetchMessagesList(`${id}`));
   }, [dispatch, id]);
 
   return (

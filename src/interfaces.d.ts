@@ -6,9 +6,9 @@ export interface IMessage {
   user_name: string;
   text_content: string;
   fromMe?: boolean;
+  state?: 'unread' | 'read'
 }
 
 export interface IProfile {
   login: string;
-  chats: string[];
 }

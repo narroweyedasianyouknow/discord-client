@@ -1,22 +1,25 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import socket from "./socketEventListener";
 import InputForm from "./components/Input";
 import MessagesWrapper from "./components/MessagesWrapper";
 import ChatsList from "./components/ChatsList/ChatsList";
 import { useAppDispatch, useAppSelector } from "./store";
-import { fetchProfile } from "./mainStore";
+import { fetchProfile } from "./store/storeSlice";
 import { addMessageStore } from "./components/messagesStorage";
 import { IMessage } from "./interfaces";
+import { storeSelector } from "./store/storeSelector";
 
+const { getProfileLogin } = storeSelector;
 function App() {
   const dispatch = useAppDispatch();
-  const login = useAppSelector((store) => store.store.profile?.login);
+  const login = useAppSelector(getProfileLogin);
   const addMessage = useCallback(
     (message: IMessage) => {
       return dispatch(
         addMessageStore({
           ...message,
           fromMe: login === message?.user_id,
+          state: login === message?.user_id ? 'read' : 'unread'
         })
       );
     },

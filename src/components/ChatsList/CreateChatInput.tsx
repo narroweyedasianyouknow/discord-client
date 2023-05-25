@@ -1,13 +1,14 @@
 import styled from "styled-components";
 import LoginIcon from "@mui/icons-material/Login";
 import { useCallback, useRef } from "react";
-import API from "../../api";
+import { useAppDispatch } from "../../store";
+import { createChatAction } from "../../store/storeSlice";
 
 const ListFooterItems = styled.div`
   position: absolute;
   bottom: 0;
   width: 100%;
-  background-color: #252525;
+  background-color: var(--bg-body);
 `;
 const ButtonWrappers = styled.form`
   cursor: pointer;
@@ -36,16 +37,19 @@ const Button = styled.button`
 
 export default function CreateChatInput() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useAppDispatch();
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
     (e) => {
       e.preventDefault();
       if (inputRef.current?.value) {
-        new API().chats().createChat({
-          title: inputRef.current.value,
-        });
+        dispatch(
+          createChatAction({
+            title: inputRef.current.value,
+          })
+        );
       }
     },
-    []
+    [dispatch]
   );
   return (
     <>

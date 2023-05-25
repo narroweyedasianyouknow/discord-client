@@ -1,16 +1,17 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import chatsReducer from "./components/ChatsList/chatsStore";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import messageReducer from "./components/messagesStorage";
-import mainStoreReducer from "./mainStore";
+import mainStoreReducer from "./store/storeSlice";
 const reducer = combineReducers({
-  chats: chatsReducer,
   messages: messageReducer,
   store: mainStoreReducer,
 });
 const setupStore = () => {
   return configureStore({
     reducer: reducer,
+    devTools: {
+      name: "hell",
+    },
   });
 };
 

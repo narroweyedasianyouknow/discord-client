@@ -1,32 +1,48 @@
-import React, { useEffect, useState } from "react";
-
+import { useCallback, useEffect, useState } from "react";
 import socket from "./socketEventListener";
-import { useMessagesStore } from "./store/messages";
 import InputForm from "./components/Input";
-import MessageItem from "./components/MessageItem/MessageItem";
 import MessagesWrapper from "./components/MessagesWrapper";
-import { useProfileStore } from "./store/profile";
+import ChatsList from "./components/ChatsList/ChatsList";
+import { useAppDispatch, useAppSelector } from "./store";
+import { fetchProfile } from "./mainStore";
+import { addMessageStore } from "./components/messagesStorage";
+import { IMessage } from "./interfaces";
 
 function App() {
-    const { addMessage, store } = useMessagesStore();
-    const { setProfile, profile } = useProfileStore();
+  const dispatch = useAppDispatch();
+  const login = useAppSelector((store) => store.store.profile?.login);
+  const addMessage = useCallback(
+    (message: IMessage) => {
+      return dispatch(
+        addMessageStore({
+          ...message,
+          fromMe: login === message?.user_id,
+        })
+      );
+    },
+    [dispatch, login]
+  );
+  useEffect(() => {
+    dispatch(fetchProfile());
+  }, [dispatch]);
+  useEffect(() => {
+    const _socket = socket(addMessage);
+    return () => {
+      _socket();
+    };
+  }, [addMessage]);
 
-    useEffect(() => {
-        if (!profile) setProfile();
-        if (profile) {
-            const _socket = socket(addMessage, profile);
-            return () => {
-                _socket();
-            };
-        }
-    }, [profile]);
-
-    return (
+  return (
+    <>
+      <div className="app">
+        <ChatsList />
         <div className="chat-body">
-            <MessagesWrapper messages={store} />
-            <InputForm />
+          <MessagesWrapper />
+          <InputForm />
         </div>
-    );
+      </div>
+    </>
+  );
 }
 
 export default App;

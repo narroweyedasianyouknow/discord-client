@@ -58,7 +58,7 @@ const TimeStamp = (props: { ts: number }) => {
     </div>
   );
 };
-const MessageItem: FC<IMessage> = (props) => {
+const MessageItem: FC<IMessage & {fromMe?: boolean}> = (props) => {
   const { fromMe, text_content, ts } = props;
 
   return (

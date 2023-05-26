@@ -5,7 +5,6 @@ export interface IMessage {
   user_id: string;
   user_name: string;
   text_content: string;
-  fromMe?: boolean;
   state?: 'unread' | 'read'
 }
 

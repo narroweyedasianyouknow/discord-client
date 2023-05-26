@@ -18,7 +18,6 @@ function App() {
       return dispatch(
         addMessageStore({
           ...message,
-          fromMe: login === message?.user_id,
           state: login === message?.user_id ? 'read' : 'unread'
         })
       );

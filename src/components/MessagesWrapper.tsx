@@ -8,10 +8,11 @@ import StickyItem from "./MessageItem/StickyItem";
 import { storeSelector } from "../store/storeSelector";
 
 const { getChatsMessages } = messagesSelector;
-const { getActiveChat } = storeSelector;
+const { getActiveChat, getProfileLogin } = storeSelector;
 const MessageWrapper = () => {
   const messages = useAppSelector(getChatsMessages);
   const activeChat = useAppSelector(getActiveChat);
+  const login = useAppSelector(getProfileLogin);
   const ref = useRef<HTMLDivElement>(null);
 
   const listener = (e?: ScrollToOptions | undefined) => {
@@ -71,7 +72,7 @@ const MessageWrapper = () => {
               message.id === "new-message-marker" ? (
                 <StickyItem />
               ) : (
-                <MessageItem key={`${message?.id}`} {...message} />
+                <MessageItem fromMe={message.user_id === login} key={`${message?.id}`} {...message} />
               )
             )}
           </section>

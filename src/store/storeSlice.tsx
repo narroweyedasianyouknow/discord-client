@@ -1,13 +1,14 @@
 import {
-  EntityState,
-  PayloadAction,
   createAsyncThunk,
   createEntityAdapter,
   createSlice,
 } from "@reduxjs/toolkit";
 import API from "../api";
-import { IProfile } from "../interfaces";
-import { IChat } from "../components/ChatsList/chat";
+import type { IChat } from "../components/ChatsList/chat";
+import type { IProfile } from "../interfaces";
+import type {
+  EntityState,
+  PayloadAction} from "@reduxjs/toolkit";
 const chatsEntity = createEntityAdapter<IChat>();
 
 export const fetchProfile = createAsyncThunk<

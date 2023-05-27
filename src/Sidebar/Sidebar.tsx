@@ -1,4 +1,5 @@
 import { styled } from "@mui/material";
+import ChatsList from "../components/ChatsList/ChatsList";
 import Header from "../components/Header/Header";
 import Typography from "../components/Typography/Typography";
 
@@ -17,13 +18,15 @@ export default function Sidebar() {
   return (
     <>
       <SidebarWrapper>
-        <Header padding="14px 16px">
+        <Header type="sidebar" padding="14px 16px">
           <Typography fontWeight={700}>
             {/* TODO: i18n localize */}
             Messenger App
           </Typography>
         </Header>
-        <List></List>
+        <List>
+          <ChatsList />
+        </List>
       </SidebarWrapper>
     </>
   );

@@ -1,5 +1,5 @@
-import { IChat } from "./components/ChatsList/chat";
-import { IMessage, IProfile } from "./interfaces";
+import type { IChat } from "./components/ChatsList/chat";
+import type { IMessage, IProfile } from "./interfaces";
 
 type useRequestType = <T>(
   method: string,

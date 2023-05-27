@@ -1,10 +1,9 @@
 import { styled } from "@mui/system";
-import Typography from "../Typography/Typography";
-import { IHeader } from ".";
+import type { IHeader } from ".";
 
 const Wrapper = styled("div", {
-  shouldForwardProp: (props) => props !== "padding",
-})<{ padding: string }>`
+  shouldForwardProp: (props) => !["padding", "borderColor"].some((v) => v === props),
+})<{ padding: string; borderColor: "body" | "sidebar" }>`
   display: flex;
   align-items: center;
 
@@ -12,13 +11,19 @@ const Wrapper = styled("div", {
   height: 49px;
   width: 100%;
   padding: ${(props) => props.padding};
-  border-bottom: 1px solid var(--divider-primary);
+  border-bottom: 1px solid
+    ${(props) =>
+      props?.borderColor === "body"
+        ? "var(--divider-body)"
+        : "var(--divider-primary)"};
 `;
 export default function Header(props: IHeader) {
-  const { children, padding } = props;
+  const { children, padding, type = "body" } = props;
   return (
     <>
-      <Wrapper padding={padding}>{children}</Wrapper>
+      <Wrapper borderColor={type} padding={padding}>
+        {children}
+      </Wrapper>
     </>
   );
 }

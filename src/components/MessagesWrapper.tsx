@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef } from "react";
-import MessageItem from "./MessageItem/MessageItem";
-import { messagesSelector } from "./messagesSelector";
-import { useAppSelector } from "../store";
 import { addEventListener } from "../events";
-import { IMessage } from "../interfaces";
-import StickyItem from "./MessageItem/StickyItem";
+import { useAppSelector } from "../store";
 import { storeSelector } from "../store/storeSelector";
+import MessageItem from "./MessageItem/MessageItem";
+import StickyItem from "./MessageItem/StickyItem";
+import { messagesSelector } from "./messagesSelector";
+import type { IMessage } from "../interfaces";
 
 const { getChatsMessages } = messagesSelector;
 const { getActiveChat, getProfileLogin } = storeSelector;
@@ -31,7 +31,7 @@ const MessageWrapper = () => {
   useEffect(() => {
     listener({ behavior: "auto" });
   }, [activeChat]);
-  
+
   useEffect(() => {
     addEventListener("scroll-to-bottom", listener);
   }, []);
@@ -77,7 +77,6 @@ const MessageWrapper = () => {
             )}
           </section>
         ))}
-        {/* {renderMessageList} */}
       </div>
     </>
   );

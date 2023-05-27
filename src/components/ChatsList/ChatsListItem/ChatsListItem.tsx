@@ -1,11 +1,12 @@
-import styled from "styled-components";
-import { chatsSelector } from "../chatsSelector";
-import { useAppDispatch, useAppSelector } from "../../../store";
-import { EntityId } from "@reduxjs/toolkit";
-import Avatar from "boring-avatars";
-import { setActiveChat } from "../../../store/storeSlice";
 import { useCallback } from "react";
+import styled from "styled-components";
+import HashtagIcon from "../../../icons/HashtagIcon";
+import { useAppDispatch, useAppSelector } from "../../../store";
+import { setActiveChat } from "../../../store/storeSlice";
+import Typography from "../../Typography/Typography";
 import { fetchMessagesList } from "../../messagesStorage";
+import { chatsSelector } from "../chatsSelector";
+import type { EntityId } from "@reduxjs/toolkit";
 
 const { getChatById } = chatsSelector;
 const ListItemWrapper = styled.div<{ $active: boolean }>`
@@ -14,15 +15,14 @@ const ListItemWrapper = styled.div<{ $active: boolean }>`
   height: fit-content;
   padding: 5px 10px;
   background-color: ${(props) =>
-    props.$active ? "var(--bg-body-hover)" : "var(--bg-body)"};
-  border-radius: 8px;
+    props.$active ? "var(--bg-active)" : "transparent"};
+  border-radius: 4px;
   width: 100%;
   cursor: pointer;
   user-select: none;
   align-items: center;
   gap: 10px;
 `;
-const ChatTitleWrapper = styled.div``;
 
 const ChatsListItem = (props: { id: EntityId; active?: string }) => {
   const { id, active } = props;
@@ -36,8 +36,10 @@ const ChatsListItem = (props: { id: EntityId; active?: string }) => {
   return (
     <>
       <ListItemWrapper $active={active === id} onClick={handleSelectChat}>
-        <Avatar size={40} variant="beam" name={chat?.title} />
-        <ChatTitleWrapper>{chat?.title}</ChatTitleWrapper>
+        <HashtagIcon width={24} height={24} />
+        <Typography color={active !== id ? "--header-light" : undefined} fontWeight={700}>
+          {chat?.title ?? ""}
+        </Typography>
       </ListItemWrapper>
     </>
   );

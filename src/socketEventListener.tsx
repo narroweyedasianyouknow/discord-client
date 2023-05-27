@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import { IMessage } from "./interfaces";
+import type { IMessage } from "./interfaces";
 
 export function uuidv4(): string {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

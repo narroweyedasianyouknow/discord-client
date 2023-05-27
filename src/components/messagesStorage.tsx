@@ -1,8 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { IMessage } from "../interfaces";
-import { dispatchCustomEvent } from "../events";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from "../api";
+import { dispatchCustomEvent } from "../events";
 import { createChatAction } from "../store/storeSlice";
+import type { IMessage } from "../interfaces";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 const fetchedList = new Set<string>();
 
@@ -23,7 +24,10 @@ export const messagesStorage = createSlice({
   name: "messagesStorage",
   initialState: initialState,
   reducers: {
-    addMessageStore: (store, action: PayloadAction<IMessage>) => {
+    addMessageStore: (
+      store,
+      action: PayloadAction<IMessage & { fromMe: boolean }>
+    ) => {
       const payload = action.payload;
       if (!(payload.subject_id in store)) store[payload.subject_id] = [];
       store[payload.subject_id].push(payload);

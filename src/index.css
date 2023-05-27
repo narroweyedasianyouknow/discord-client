@@ -1,26 +1,50 @@
 html,
 body,
 #root {
-  height: calc(100% - 10px);
+  height: 100%;
+  overflow: hidden;
 }
 
 :root {
-  --bg-body: #252525;
-  --bg-body-hover: #2d2d2d;
-  --bg-second:  rgba(255, 255, 255, 0.87);
-  position: relative;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* light/bg-body */
+  --bg-body: #ffffff;
+
+  /* light/text-100 */
+  --text-100: #060607;
+
+  /* light/header-light */
+  --header-light: #747f8d;
+
+  /* light/header-dark */
+  --header-dark: #4f5660;
+
+  /* light/bg-second */
+  --bg-second: #EBEDEF;
+
+  /* light/bg-active */
+  --bg-active: #d3d7db;
+
+  /* light/sidebar-primary */
+  --sidebar-primary: #f2f3f5;
+
+  /* light/sidebar-second */
+  --sidebar-second: #ebedef;
+
+  /* light/divider-primary */
+  --divider-primary: #e3e5e8;
+
+  /* light/divider-body */
+  --divider-body: #e3e5e8;
+
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background: rgb(56, 53, 255);
-  background: linear-gradient(
-    90deg,
-    rgba(56, 53, 255, 1) 0%,
-    rgba(179, 0, 255, 1) 100%
-  );
+
+  color: var(--text-100);
+  background: var(--bg-body);
+  box-sizing: border-box;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -28,7 +52,42 @@ body,
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* dark/bg-body */
+    --bg-body: #37393f;
 
+    /* dark/text-100 */
+    --text-100: #ffffff;
+
+    /* dark/header-light */
+    --header-light: #8e9297;
+
+    /* dark/header-dark */
+    --header-dark: #b9bbbe;
+
+    /* dark/divider */
+    --divider: #303239;
+
+    /* dark/bg-second */
+    --bg-second: #40444b;
+
+    /* dark/bg-active */
+    --bg-active: #4f545c;
+
+    /* dark/sidebar-primary */
+    --sidebar-primary: #2e3036;
+
+    /* dark/sidebar-secondary */
+    --sidebar-secondary: #292b2f;
+
+    /* dark/divider-primary */
+    --divider-primary: #222327;
+
+    /* dark/divider-body */
+    --divider-body: #303239;
+  }
+}
 * {
   padding: 0;
   margin: 0;
@@ -89,14 +148,9 @@ body,
   scrollbar-width: none;
 
   padding: 0 10px;
-  max-width: 550px;
-  width: 550px;
 
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-.chat-body-scroll::-webkit-scrollbar {
-  display: none;
 }
 .message-tail {
   position: absolute;
@@ -107,7 +161,6 @@ body,
   left: unset;
   right: -6px;
 }
-
-.chats-list {
-  /* position: absolute; */
+section {
+  width: 100%;
 }

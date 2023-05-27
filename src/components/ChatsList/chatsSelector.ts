@@ -1,5 +1,6 @@
-import { EntityId, createSelector } from "@reduxjs/toolkit";
-import { RootState } from "../../store";
+import { createSelector } from "@reduxjs/toolkit";
+import type { RootState } from "../../store";
+import type { EntityId} from "@reduxjs/toolkit";
 
 export const chatsSelector = {
   getChatsIds: createSelector(

@@ -1,21 +1,18 @@
-import ChatsListItem from "./ChatsListItem/ChatsListItem";
-import styled from "styled-components";
-import { chatsSelector } from "./chatsSelector";
-import { useAppSelector } from "../../store";
 import { useMemo } from "react";
-import CreateChatInput from "./CreateChatInput";
+import styled from "styled-components";
+import { useAppSelector } from "../../store";
 import { storeSelector } from "../../store/storeSelector";
+import ChatsListItem from "./ChatsListItem/ChatsListItem";
+import { chatsSelector } from "./chatsSelector";
 
 const { getChatsIds } = chatsSelector;
 const ChatListWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 10px 0;
-  height: 100%;
-  background-color: var(--bg-body);
-  border-radius: 16px;
   position: relative;
   overflow: hidden;
+  background: transparent;
+  padding: 5px 10px;
 `;
 
 const { getActiveChat } = storeSelector;
@@ -29,7 +26,7 @@ const ChatsList = () => {
     <>
       <ChatListWrapper>
         {chats}
-        <CreateChatInput />
+        {/* <CreateChatInput /> */}
       </ChatListWrapper>
     </>
   );

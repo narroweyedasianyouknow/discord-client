@@ -1,5 +1,5 @@
 import { styled } from "@mui/material";
-import { ITypography } from ".";
+import type { ITypography } from ".";
 
 const TextWrapper = styled("span", {
   shouldForwardProp: (props) =>

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { uuidv4 } from "../socketEventListener";
 import API from "../api";
-import { Send } from "@mui/icons-material";
+import AddFilledIcon from "../icons/AddFilledIcon";
+import { uuidv4 } from "../socketEventListener";
 import { useAppSelector } from "../store";
 import { storeSelector } from "../store/storeSelector";
 
@@ -11,54 +12,53 @@ const Form = styled.form`
   display: grid;
   grid-template-columns: 1fr 35px;
   gap: 5px;
-  max-width: 400px;
   align-items: center;
   padding: 5px 10px;
 
-  margin: 0 auto;
+  margin: 16px 16px 20px;
 `;
 const Input = styled.input`
-  height: 54px;
   width: 100%;
   border: none;
-  border-radius: 16px;
   outline: none;
   padding: 15px;
   font-size: 16px;
+  font-weight: 400;
+  background-color: var(--bg-second);
+  &::placeholder {
+    color: var(--header-light);
+  }
 `;
-const Submit = styled.button`
-  max-height: 35px;
-  aspect-ratio: 1/1;
-  width: 35px;
-  border-radius: 50%;
-  height: 100%;
-  border: none;
-  outline: none;
+const InputWrapper = styled.div`
+  height: 44px;
+  border-radius: 8px;
+  overflow: hidden;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background: #ffffff;
-  transition: 0.2s ease-in-out;
-  cursor: pointer;
-  color: #383838;
-  margin: 0;
-  &:hover {
-    background: #383838;
-    color: #ffffff;
-  }
-  &:active {
-    background: #1d1d1d;
-    color: #ffffff;
-  }
+  justify-content: center;
+`;
+const Button = styled.div`
+  height: 44px;
+  width: 44px;
+  background-color: var(--bg-second);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1px;
 `;
 const { getActiveChat } = storeSelector;
-const InputForm = () => {
+const MessageInput = () => {
+  const { t } = useTranslation();
   const chat = useAppSelector(getActiveChat);
   const [value, setValue] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
-
+  const message = chat
+    ? (t("chat.input.message_channel", {
+        channel_name: chat,
+      }) as string)
+    : "";
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (value.length > 0 && chat) {
@@ -74,20 +74,20 @@ const InputForm = () => {
   return (
     <>
       <Form onSubmit={handleSubmit}>
-        <div className="input">
+        <InputWrapper>
+          <Button>
+            <AddFilledIcon />
+          </Button>
           <Input
             disabled={!chat}
-            placeholder="Message"
+            placeholder={message}
             value={value}
             onChange={handleChange}
           />
-        </div>
-        <Submit type="submit">
-          <Send />
-        </Submit>
+        </InputWrapper>
       </Form>
     </>
   );
 };
 
-export default InputForm;
+export default MessageInput;

@@ -5,46 +5,43 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Typography from "../Typography/Typography";
 import type { IMessage } from "../../interfaces";
-import type { FC} from "react";
+import type { FC } from "react";
 import "./MessageItem.scss";
 
-const MessageContainer = styled.div<{
-  $fromMe?: boolean;
-}>`
+const MessageContainer = styled.div`
   display: grid;
   width: 100%;
   grid-template-columns: min-content auto;
   grid-template-rows: repeat(2, min-content);
   grid-column-gap: 10px;
-  padding: 3px 5px;
+  padding: 3px 15px;
+  &:hover {
+    background: var(--bg-chat-body);
+  }
 `;
-const MessageWrapper = styled.div<{
-  $fromMe?: boolean;
-}>`
+const MessageWrapper = styled.div`
   width: fit-content;
   border-radius: 16px;
   font-size: 16px;
   line-height: 1.3125;
-  border-bottom-left-radius: ${(props) => (props?.$fromMe ? "16px" : "0")};
-  border-bottom-right-radius: ${(props) => (props?.$fromMe ? "0" : "16px")};
   position: relative;
   grid-area: 2 / 2 / 3 / 3;
 `;
 const MessageContent = styled.div`
   display: flex;
-  color: var(--text-100);
 `;
 const TextWrapper = styled.div`
   word-wrap: break-word;
   overflow: hidden;
   word-break: break-all;
+  color: var(--text-80);
 `;
 const Time = styled.span`
   padding-left: 4px;
   font-size: 12px;
   font-weight: 400;
   line-height: 12px;
-  color: #aaaaaa;
+  color: var(--header-light);
 `;
 const MessageHeader = styled.div`
   display: flex;
@@ -72,20 +69,22 @@ const TimeStamp = (props: { ts: number }) => {
   );
 };
 const MessageItem: FC<IMessage & { fromMe?: boolean }> = (props) => {
-  const { fromMe, text_content, user_id, ts } = props;
+  const { text_content, user_id, ts } = props;
 
   return (
     <>
-      <MessageContainer $fromMe={fromMe}>
+      <MessageContainer>
         <div className="avatar">
           <Avatar name={user_id} variant="beam" />
         </div>
         <MessageHeader>
-          <Typography>{user_id}</Typography>
+          <Typography fontWeight={500} color="--text-90">
+            {user_id}
+          </Typography>
           <TimeStamp ts={ts} />
         </MessageHeader>
 
-        <MessageWrapper $fromMe={fromMe}>
+        <MessageWrapper>
           <MessageContent>
             <TextWrapper>{text_content}</TextWrapper>
           </MessageContent>

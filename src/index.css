@@ -9,8 +9,17 @@ body,
   /* light/bg-body */
   --bg-body: #ffffff;
 
+  /* light/bg-chat-body */
+  --bg-chat-body: #ffffff;
+
   /* light/text-100 */
   --text-100: #060607;
+
+  /* light/text-90 */
+  --text-90: rgb(6, 6, 7);
+
+  /* light/text-80 */
+  --text-80: rgb(49, 51, 56);
 
   /* light/header-light */
   --header-light: #747f8d;
@@ -19,7 +28,7 @@ body,
   --header-dark: #4f5660;
 
   /* light/bg-second */
-  --bg-second: #EBEDEF;
+  --bg-second: #ebedef;
 
   /* light/bg-active */
   --bg-active: #d3d7db;
@@ -37,13 +46,14 @@ body,
   --divider-body: #e3e5e8;
 
   font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
 
   color: var(--text-100);
-  background: var(--bg-body);
+  background: var(--bg-chat-body);
   box-sizing: border-box;
 
   font-synthesis: none;
@@ -57,8 +67,17 @@ body,
     /* dark/bg-body */
     --bg-body: #37393f;
 
+    /* light/bg-chat-body */
+    --bg-chat-body: #313338;
+
     /* dark/text-100 */
     --text-100: #ffffff;
+
+    /* light/text-90 */
+    --text-90: rgb(242, 243, 245);
+
+    /* light/text-80 */
+    --text-80: rgb(219, 222, 225);
 
     /* dark/header-light */
     --header-light: #8e9297;
@@ -147,10 +166,23 @@ body,
   -ms-overflow-style: none;
   scrollbar-width: none;
 
-  padding: 0 10px;
-
-  -ms-overflow-style: none;
   scrollbar-width: none;
+
+  display: flex;
+  flex-direction: column-reverse;
+  position: relative;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+
+}
+.chat-body-scroll::-webkit-scrollbar {
+  display: none;
 }
 .message-tail {
   position: absolute;
@@ -162,5 +194,7 @@ body,
   right: -6px;
 }
 section {
+  display: flex;
+  flex-direction: column;
   width: 100%;
 }

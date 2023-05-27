@@ -20,6 +20,9 @@ const HeaderInner = styled("div")`
   align-items: center;
   padding: 0 14px;
 `;
+const MessagesListContainer = styled("div")`
+  position: relative;
+`;
 const { getActiveChat } = storeSelector;
 export default function ChatBody() {
   const activeChat = useSelector(getActiveChat);
@@ -36,7 +39,9 @@ export default function ChatBody() {
     <>
       <ChatWrapper>
         <Header padding="12px 6px">{headerTitle}</Header>
-        <MessageWrapper />
+        <MessagesListContainer>
+          <MessageWrapper />
+        </MessagesListContainer>
         <MessageInput />
       </ChatWrapper>
     </>

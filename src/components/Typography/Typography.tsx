@@ -3,19 +3,26 @@ import type { ITypography } from ".";
 
 const TextWrapper = styled("span", {
   shouldForwardProp: (props) =>
-    !["fontWeight", "color"].some((val) => val === props),
+    !["fontWeight", "color", "fontSize"].some((val) => val === props),
 })<{
   fontWeight: number;
+  fontSize: string;
   color: string;
-}>(({ color, fontWeight }) => ({
+}>(({ color, fontWeight, fontSize }) => ({
   fontWeight,
+  fontSize,
   color: `var(${color})`,
 }));
 export default function Typography(props: ITypography) {
-  const { color = "--text-100", fontWeight = 400, children } = props;
+  const {
+    color = "--text-100",
+    fontSize = "16px",
+    fontWeight = 400,
+    children,
+  } = props;
   return (
     <>
-      <TextWrapper fontWeight={fontWeight} color={color}>
+      <TextWrapper fontSize={fontSize} fontWeight={fontWeight} color={color}>
         {children}
       </TextWrapper>
     </>

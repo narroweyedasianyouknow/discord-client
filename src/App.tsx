@@ -1,15 +1,19 @@
 import { useCallback, useEffect } from "react";
 import styled from "styled-components";
 import ChatBody from "./ChatBody/ChatBody";
+import GuildsList from "./GuildsList/GuildsList";
 import Sidebar from "./Sidebar/Sidebar";
+import DialogLogin from "./components/Dialog/DialogLogin";
+import DialogWrapper from "./components/Dialog/DialogWrapper";
+import Loader from "./components/Loader/Loader";
 import { addMessageStore } from "./components/messagesStorage";
 import socket from "./socketEventListener";
 import { useAppDispatch, useAppSelector } from "./store";
 import { storeSelector } from "./store/storeSelector";
 import { fetchProfile } from "./store/storeSlice";
-import type { IMessage } from "./interfaces";
+import type { MessagesType } from "./components/messages.interface";
 
-const { getProfileLogin } = storeSelector;
+const { getProfileLogin, getServiceInitStatus } = storeSelector;
 // function App() {
 //   const dispatch = useAppDispatch();
 //   const login = useAppSelector(getProfileLogin);
@@ -52,21 +56,19 @@ const AppWrapper = styled.div`
   display: grid;
   height: 100%;
   background-color: var(--bg-body);
-  grid-template-columns: 270px 1fr;
+  grid-template-columns: 72px 270px 1fr;
 `;
 export default function App() {
   const dispatch = useAppDispatch();
   const login = useAppSelector(getProfileLogin);
+  const { profile, guilds } = useAppSelector(getServiceInitStatus);
   const addMessage = useCallback(
-    (message: IMessage) => {
+    (message: MessagesType) => {
       return dispatch(
-        addMessageStore({
-          ...message,
-          fromMe: login === message?.user_id,
-        })
+        addMessageStore(message)
       );
     },
-    [dispatch, login]
+    [dispatch]
   );
   useEffect(() => {
     dispatch(fetchProfile());
@@ -77,10 +79,25 @@ export default function App() {
       _socket();
     };
   }, [addMessage]);
-
+  if (!login) {
+    if (profile)
+      return (
+        <DialogWrapper
+          bgColor="--brand-color-560"
+          onClose={() => {
+            //
+          }}
+          active={true}
+        >
+          <DialogLogin />
+        </DialogWrapper>
+      );
+    return <Loader />;
+  }
   return (
     <>
       <AppWrapper>
+        <GuildsList />
         <Sidebar />
         <ChatBody />
       </AppWrapper>

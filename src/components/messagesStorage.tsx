@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from "../api";
-import { dispatchCustomEvent } from "../events";
 import { createChatAction } from "../store/storeSlice";
+import type { MessagesType } from "./messages.interface";
 import type { IMessage } from "../interfaces";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
@@ -19,19 +19,16 @@ export const fetchMessagesList = createAsyncThunk<IMessage[], string>(
   }
 );
 
-const initialState: Record<string, IMessage[]> = {};
+const initialState: Record<string, MessagesType[]> = {};
 export const messagesStorage = createSlice({
   name: "messagesStorage",
   initialState: initialState,
   reducers: {
-    addMessageStore: (
-      store,
-      action: PayloadAction<IMessage & { fromMe: boolean }>
-    ) => {
+    addMessageStore: (store, action: PayloadAction<MessagesType>) => {
       const payload = action.payload;
-      if (!(payload.subject_id in store)) store[payload.subject_id] = [];
-      store[payload.subject_id].push(payload);
-      if (payload.fromMe) dispatchCustomEvent("scroll-to-bottom");
+      if (!(payload.channel_id in store)) store[payload.channel_id] = [];
+      store[payload.channel_id].push(payload);
+      // if (payload.fromMe) dispatchCustomEvent("scroll-to-bottom");
     },
   },
   extraReducers: (builder) =>
@@ -39,10 +36,10 @@ export const messagesStorage = createSlice({
       .addCase(fetchMessagesList.fulfilled, (state, action) => {
         if (action.payload && action.payload?.length > 0) {
           const message = action.payload[0];
-          state[message.subject_id] = action.payload;
-          dispatchCustomEvent("scroll-to-bottom", {
-            behavior: "auto",
-          });
+          // state[message.subject_id] = action.payload;
+          // dispatchCustomEvent("scroll-to-bottom", {
+          //   behavior: "auto",
+          // });
         }
       })
       .addCase(createChatAction.fulfilled, (state, action) => {

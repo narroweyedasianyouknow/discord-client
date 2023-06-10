@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Typography from "../Typography/Typography";
-import type { IMessage } from "../../interfaces";
+import type { MessagesType } from "../messages.interface";
 import type { FC } from "react";
 import "./MessageItem.scss";
 
@@ -68,25 +68,25 @@ const TimeStamp = (props: { ts: number }) => {
     </div>
   );
 };
-const MessageItem: FC<IMessage & { fromMe?: boolean }> = (props) => {
-  const { text_content, user_id, ts } = props;
+const MessageItem: FC<MessagesType & { fromMe?: boolean }> = (props) => {
+  const { content, author, nonce } = props;
 
   return (
     <>
       <MessageContainer>
         <div className="avatar">
-          <Avatar name={user_id} variant="beam" />
+          <Avatar name={author?.username} variant="beam" />
         </div>
         <MessageHeader>
           <Typography fontWeight={500} color="--text-90">
-            {user_id}
+            {author?.username}
           </Typography>
-          <TimeStamp ts={ts} />
+          <TimeStamp ts={+nonce} />
         </MessageHeader>
 
         <MessageWrapper>
           <MessageContent>
-            <TextWrapper>{text_content}</TextWrapper>
+            <TextWrapper>{content}</TextWrapper>
           </MessageContent>
         </MessageWrapper>
       </MessageContainer>

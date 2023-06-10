@@ -6,7 +6,7 @@ import { storeSelector } from "../store/storeSelector";
 import MessageItem from "./MessageItem/MessageItem";
 import StickyItem from "./MessageItem/StickyItem";
 import { messagesSelector } from "./messagesSelector";
-import type { IMessage } from "../interfaces";
+import type { MessagesType } from "./messages.interface";
 
 const { getChatsMessages } = messagesSelector;
 const { getProfileLogin } = storeSelector;
@@ -29,7 +29,7 @@ const ScrollbarItem = styled("div")`
   top: 0;
   right: 0;
   will-change: height, top;
-  transition: top .05s ease-in-out;
+  transition: top 0.05s ease-in-out;
 `;
 
 const MessageWrapper = () => {
@@ -72,9 +72,7 @@ const MessageWrapper = () => {
         scrollbarRef.current.style.top = `${100 - scrolledPercentage * 100}%`;
         const parent = scrollbarRef.current.parentElement;
         if (parent)
-          scrollbarRef.current.parentElement.style.paddingBottom = `${
-            height
-          }px`;
+          scrollbarRef.current.parentElement.style.paddingBottom = `${height}px`;
       }
     };
     element?.addEventListener("scroll", scrollListener);
@@ -97,22 +95,22 @@ const MessageWrapper = () => {
   }, []);
 
   const groupedMessages = useMemo(() => {
-    const groups: { [date: string]: IMessage[] } = {};
-    let isNewMessage = false;
+    const groups: { [date: string]: MessagesType[] } = {};
+    const isNewMessage = false;
 
     messages.forEach((message) => {
-      const messageDate = new Date(+message.ts).toDateString();
-      if (message.state === "unread" && !isNewMessage) {
-        groups[messageDate].push({
-          id: "new-message-marker",
-          ts: 0,
-          subject_id: "",
-          user_id: "",
-          user_name: "",
-          text_content: "New Message",
-        });
-        isNewMessage = true;
-      }
+      const messageDate = new Date(+message.nonce).toDateString();
+      // if (message.state === "unread" && !isNewMessage) {
+      //   groups[messageDate].push({
+      //     id: "new-message-marker",
+      //     ts: 0,
+      //     subject_id: "",
+      //     user_id: "",
+      //     user_name: "",
+      //     text_content: "New Message",
+      //   });
+      //   isNewMessage = true;
+      // }
       if (groups[messageDate]) {
         groups[messageDate].push(message);
       } else {
@@ -128,12 +126,12 @@ const MessageWrapper = () => {
         {Object.entries(groupedMessages).map(([date, messages]) => (
           <section date-day={date} key={date}>
             <StickyItem ts={date} />
-            {messages.map((message: JSX.IntrinsicAttributes & IMessage) =>
+            {messages.map((message: JSX.IntrinsicAttributes & MessagesType) =>
               message.id === "new-message-marker" ? (
                 <StickyItem />
               ) : (
                 <MessageItem
-                  fromMe={message.user_id === login}
+                  fromMe={message.author === login}
                   key={`${message?.id}`}
                   {...message}
                 />

@@ -5,7 +5,7 @@ export const messagesSelector = {
   getChatsMessages: createSelector(
     [
       (store: RootState) => store.messages,
-      (store: RootState) => store.store.activeChat ?? "",
+      (store: RootState) => store.store.activeChannel ?? "",
     ],
     (messages, id) => (id in messages ? messages[id] : [])
   )

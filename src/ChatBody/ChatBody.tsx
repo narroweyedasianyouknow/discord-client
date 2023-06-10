@@ -23,15 +23,15 @@ const HeaderInner = styled("div")`
 const MessagesListContainer = styled("div")`
   position: relative;
 `;
-const { getActiveChat } = storeSelector;
+const { getActiveChannel } = storeSelector;
 export default function ChatBody() {
-  const activeChat = useSelector(getActiveChat);
+  const activeChat = useSelector(getActiveChannel);
   const headerTitle = useMemo(() => {
     if (!activeChat) return <></>;
     return (
       <HeaderInner>
         <HashtagIcon />
-        <Typography fontWeight={700}>{activeChat}</Typography>
+        <Typography fontWeight={700}>{activeChat?.name}</Typography>
       </HeaderInner>
     );
   }, [activeChat]);

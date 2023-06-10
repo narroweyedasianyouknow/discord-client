@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import API from "../api";
+import API from "@/api";
 import AddFilledIcon from "../icons/AddFilledIcon";
-import { uuidv4 } from "../socketEventListener";
 import { useAppSelector } from "../store";
 import { storeSelector } from "../store/storeSelector";
 
@@ -27,6 +26,7 @@ const Input = styled.input`
   background-color: var(--bg-second);
   &::placeholder {
     color: var(--header-light);
+    user-select: none;
   }
 `;
 const InputWrapper = styled.div`
@@ -46,27 +46,33 @@ const Button = styled.div`
   justify-content: center;
   margin-right: 1px;
 `;
-const { getActiveChat } = storeSelector;
+const { getActiveChannel } = storeSelector;
 const MessageInput = () => {
   const { t } = useTranslation();
-  const chat = useAppSelector(getActiveChat);
+  const channel = useAppSelector(getActiveChannel);
   const [value, setValue] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
-  const message = chat
-    ? (t("chat.input.message_channel", {
-        channel_name: chat,
-      }) as string)
+  const message = channel
+    ? t("chat.input.message_channel", {
+        channel_name: channel.name,
+      })
     : "";
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (value.length > 0 && chat) {
+    if (value.length > 0 && channel) {
       new API().message().addMessage({
-        id: uuidv4(),
-        subject_id: chat,
-        text_content: value,
-        ts: +new Date(),
+        channel_id: channel.id,
+        content: value,
+        timestamp: 0,
+        tts: false,
+        mention_everyone: false,
+        mentions: [],
+        mention_roles: [],
+        attachments: [],
+        pinned: false,
+        type: 0,
       });
       setValue("");
     }
@@ -79,7 +85,7 @@ const MessageInput = () => {
             <AddFilledIcon />
           </Button>
           <Input
-            disabled={!chat}
+            disabled={!channel}
             placeholder={message}
             value={value}
             onChange={handleChange}

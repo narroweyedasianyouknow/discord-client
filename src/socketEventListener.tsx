@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import type { IMessage } from "./interfaces";
+import type { MessagesType } from "./components/messages.interface";
 
 export function uuidv4(): string {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -17,7 +17,7 @@ function getCookie(name: string) {
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts?.pop()?.split(";").shift();
 }
-const socket = (addMessage: (message: IMessage) => void) => {
+const socket = (addMessage: (message: MessagesType) => void) => {
   const socket = io("http://localhost:3000/", {
     reconnectionDelay: 10000,
     transports: ["websocket"],
@@ -26,19 +26,10 @@ const socket = (addMessage: (message: IMessage) => void) => {
     },
   });
 
-  socket.on(
-    "add-message",
-    (data: {
-      id: string;
-      subject_id: string;
-      text_content: string;
-      ts: number;
-      user_id: string;
-      user_name: string;
-    }) => {
-      addMessage(data);
-    }
-  );
+  socket.on("add-message", (data: MessagesType) => {
+    console.log(data);
+    addMessage(data);
+  });
   return () => {
     socket.close();
   };

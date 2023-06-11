@@ -1,2 +1,3 @@
-## CHAT APP
-This is test chat app. 
+## DISCORD CLIENT APP
+
+### Under construction

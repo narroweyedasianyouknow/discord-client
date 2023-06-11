@@ -1,11 +1,9 @@
-import { styled } from "@mui/material";
 import React from "react";
-import type { SxProps, Theme } from "@mui/material";
+import styled from "styled-components";
 import type { ButtonHTMLAttributes } from "react";
 
 interface IButton {
   children: React.ReactNode;
-  sx?: SxProps<Theme> | undefined;
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
   onSubmit?: ButtonHTMLAttributes<HTMLButtonElement>["onSubmit"];
   onClick?: ButtonHTMLAttributes<HTMLButtonElement>["onClick"];
@@ -49,10 +47,10 @@ const InnerContent = styled("div")`
   vertical-align: baseline;
 `;
 export default function Button(props: IButton) {
-  const { children, sx, type, onSubmit, onClick } = props;
+  const { children, type, onSubmit, onClick } = props;
   return (
     <>
-      <ButtonWrapper type={type} sx={sx} onClick={onClick} onSubmit={onSubmit}>
+      <ButtonWrapper type={type} onClick={onClick} onSubmit={onSubmit}>
         <InnerContent>{children}</InnerContent>
       </ButtonWrapper>
     </>

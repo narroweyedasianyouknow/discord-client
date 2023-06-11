@@ -2,7 +2,7 @@ import type { PersonType } from "@/GuildsList/guild";
 
 export type MessagesType = {
   id: string; //	id of the channel the message was sent in
-  channel_id: number; //	id of the channel the message was sent in
+  channel_id: string; //	id of the channel the message was sent in
   author: Partial<PersonType>; //	user object	the author of this message (not guaranteed to be a valid user, see below)
   content: string; //	string	contents of the message
   timestamp: number; // timestamp	when this message was sent

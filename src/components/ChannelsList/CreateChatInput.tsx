@@ -1,4 +1,3 @@
-import LoginIcon from "@mui/icons-material/Login";
 import { useCallback, useRef } from "react";
 import styled from "styled-components";
 import { useAppDispatch } from "../../store";
@@ -57,7 +56,7 @@ export default function CreateChatInput() {
         <ButtonWrappers onSubmit={handleSubmit}>
           <Input ref={inputRef} type="text" defaultValue={""} />
           <Button type="submit">
-            <LoginIcon />
+            {/* <LoginIcon /> */}
           </Button>
         </ButtonWrappers>
       </ListFooterItems>

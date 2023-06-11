@@ -58,16 +58,12 @@ const AppWrapper = styled.div`
   background-color: var(--bg-body);
   grid-template-columns: 72px 270px 1fr;
 `;
-export default function App() {
+function App() {
   const dispatch = useAppDispatch();
   const login = useAppSelector(getProfileLogin);
   const { profile, guilds } = useAppSelector(getServiceInitStatus);
   const addMessage = useCallback(
-    (message: MessagesType) => {
-      return dispatch(
-        addMessageStore(message)
-      );
-    },
+    (message: MessagesType) => dispatch(addMessageStore(message)),
     [dispatch]
   );
   useEffect(() => {
@@ -79,6 +75,7 @@ export default function App() {
       _socket();
     };
   }, [addMessage]);
+
   if (!login) {
     if (profile)
       return (
@@ -104,3 +101,4 @@ export default function App() {
     </>
   );
 }
+export default App;

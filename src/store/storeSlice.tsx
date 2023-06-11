@@ -1,14 +1,10 @@
-import {
-  createAsyncThunk,
-  createEntityAdapter,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PersonType } from "@/GuildsList/guild";
 import { fetchGuildsList } from "@/GuildsList/guildsStorage";
+import { setActiveGuild } from "@/components/messagesStorage";
 import API from "../api";
 import type { IChat } from "../components/ChannelsList/channels.interface";
-import type { EntityState, PayloadAction } from "@reduxjs/toolkit";
-const chatsEntity = createEntityAdapter<IChat>();
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 export const fetchProfile = createAsyncThunk<{ response: PersonType }>(
   "mainStore/fetchProfile",
@@ -34,11 +30,11 @@ export const createChatAction = createAsyncThunk<
 >("chatsStorage/create", (payload) => {
   return new API().chats().createChat(payload);
 });
+
 const initialState: {
   profile?: PersonType;
-  activeChannel?: number;
-  activeGuild?: number;
-  chats: EntityState<IChat>;
+  activeChannel?: string;
+  activeGuild?: string;
   initialized: {
     profile: boolean;
     guilds: boolean;
@@ -51,21 +47,25 @@ const initialState: {
   },
   activeChannel: undefined,
   activeGuild: undefined,
-  chats: chatsEntity.getInitialState(),
 };
 export const mainStore = createSlice({
   name: "mainStore",
   initialState,
   reducers: {
-    setActiveChannel: (state, action: PayloadAction<number | undefined>) => {
+    setActiveChannel: (state, action: PayloadAction<string | undefined>) => {
       state.activeChannel = action.payload;
     },
-    setActiveGuild: (state, action: PayloadAction<number | undefined>) => {
-      state.activeGuild = action.payload;
-    },
+    // setActiveGuild: (state, action: PayloadAction<string | undefined>) => {
+    //   state.activeGuild = action.payload;
+    // },
   },
   extraReducers: (builder) =>
     builder
+      .addCase(setActiveGuild.fulfilled, (state, action) => {
+        const { activeChannel, activeGuild } = action.payload;
+        state.activeChannel = activeChannel;
+        state.activeGuild = activeGuild;
+      })
       .addCase(fetchProfile.fulfilled, (state, action) => {
         state.profile = action.payload.response;
         state.initialized.profile = true;
@@ -81,14 +81,9 @@ export const mainStore = createSlice({
       })
       .addCase(loginAction.fulfilled, (state, action) => {
         state.profile = action.payload.response;
-      })
-      .addCase(createChatAction.fulfilled, (state, action) => {
-        if (action.payload.response) {
-          chatsEntity.addOne(state.chats, action.payload.response);
-        }
       }),
 });
 
 const mainStoreReducer = mainStore.reducer;
-export const { setActiveChannel, setActiveGuild } = mainStore.actions;
+export const { setActiveChannel } = mainStore.actions;
 export default mainStoreReducer;

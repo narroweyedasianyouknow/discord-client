@@ -1,4 +1,5 @@
 import Avatar from "boring-avatars";
+import React from "react";
 import styled, { keyframes } from "styled-components";
 import { useAppSelector } from "@/store";
 import guildsSelector from "./guildsSelector";
@@ -24,7 +25,7 @@ const GuildWrapper = styled.div<{ $active: boolean }>`
   cursor: pointer;
   position: relative;
   &::after {
-    animation: ${switchGuildAnim} .2s ease-in-out 1;
+    animation: ${switchGuildAnim} 0.2s ease-in-out 1;
     content: "";
     display: ${(props) => (props.$active ? "block" : "none")};
     width: 4px;
@@ -36,12 +37,25 @@ const GuildWrapper = styled.div<{ $active: boolean }>`
     background-color: var(--header-primary);
   }
 `;
+const UploadedAvatar = styled.img<{ $active: boolean }>`
+  height: 48px;
+  transition: border-radius 0.2s ease-in-out;
+  border-radius: ${(props) => (props.$active ? "16px" : "50%")};
+  overflow: hidden;
+  display: inline-flex;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  object-fit: cover;
+  aspect-ratio: 1/1;
+`;
 const { getGuild } = guildsSelector;
-export default function GuildItem(props: {
+type GuildItemType = {
   id: EntityId;
-  onClick: (id: EntityId) => void;
+  onClick: any;
   active: boolean;
-}) {
+};
+function GuildItem(props: GuildItemType) {
   const { id, active, onClick } = props;
   const item = useAppSelector((s) => getGuild(s, id));
   return (
@@ -52,11 +66,19 @@ export default function GuildItem(props: {
           onClick(id);
         }}
       >
-        <Avatar size={48} variant="beam" name={item?.name} />
+        {item?.icon ? (
+          <UploadedAvatar
+            $active={active}
+            src={`http://localhost:3000/uploads/${item?.icon}.png`}
+          />
+        ) : (
+          <Avatar size={48} variant="beam" name={item?.name} />
+        )}
       </GuildWrapper>
     </>
   );
 }
+export default GuildItem;
 export function GuildItemButton(props: {
   children: React.ReactNode;
   onClick?: MouseEventHandler<HTMLDivElement>;

@@ -1,10 +1,10 @@
-import { styled } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
+import styled from "styled-components";
 import DialogCreateServer from "@/components/Dialog/DialogCreateServer";
 import DialogWrapper from "@/components/Dialog/DialogWrapper";
+import { setActiveGuild } from "@/components/messagesStorage";
 import AddIcon from "@/icons/AddIcon";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { setActiveGuild } from "@/store/storeSlice";
 import GuildItem, { GuildItemButton } from "./GuildItem";
 import guildsSelector from "./guildsSelector";
 import { fetchGuildsList } from "./guildsStorage";
@@ -30,7 +30,7 @@ export default function GuildsList() {
   }, [dispatch]);
   const handleClickGuild = useCallback(
     (id: EntityId) => {
-      dispatch(setActiveGuild((id)));
+      dispatch(setActiveGuild(String(id)));
     },
     [dispatch]
   );

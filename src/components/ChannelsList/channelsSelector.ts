@@ -6,15 +6,15 @@ export const channelsSelector = {
     [
       (store: RootState) =>
         store.store.activeGuild
-          ? store.channels[store.store.activeGuild].ids
-          : [],
+          ? store.channels[store.store.activeGuild]
+          : undefined,
     ],
-    (entity) => entity
+    (entity) => entity?.ids ?? []
   ),
   getActiveId: createSelector(
     [
       function (store: RootState) {
-        return store.store.activeChannel
+        return store.store.activeChannel;
         // const { activeGuild, activeChannel } = store.store;
         // if (!activeGuild || !activeChannel) return undefined;
         // return store.channels[activeGuild].entities[activeChannel];
@@ -24,7 +24,7 @@ export const channelsSelector = {
   ),
   getChannelById: createSelector(
     [
-      (store: RootState, id: number) =>
+      (store: RootState, id: string) =>
         store.store.activeGuild
           ? store.channels[store.store.activeGuild].entities[id]
           : undefined,

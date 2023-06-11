@@ -8,7 +8,7 @@ export interface IChat {
 }
 
 export type ChannelType = {
-  id: number;
+  id: string;
   channel_type: CHANNEL_TYPES_LIST; //	the type of channel
   guild_id?: string; //	string	the id of the guild (may be missing for some channel objects received over gateway guild dispatches)
   position?: number; //	sorting position of the channel

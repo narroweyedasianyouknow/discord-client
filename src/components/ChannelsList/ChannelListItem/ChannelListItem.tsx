@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
+import { fetchMessagesList } from "@/components/messagesStorage";
 import HashtagIcon from "../../../icons/HashtagIcon";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { setActiveChannel } from "../../../store/storeSlice";
@@ -23,15 +24,14 @@ const ListItemWrapper = styled.div<{ $active: boolean }>`
 `;
 
 const { getChannelById } = channelsSelector;
-const ChannelListItem = (props: { id: number; active?: number }) => {
+const ChannelListItem = (props: { id: string; active?: string }) => {
   const { id, active } = props;
   const channel = useAppSelector((s) => getChannelById(s, id));
   const dispatch = useAppDispatch();
   const handleSelectChat = useCallback(() => {
     dispatch(setActiveChannel(channel?.id));
-    // dispatch(fetchMessagesList(`${channel}`));
+    if (channel?.id) dispatch(fetchMessagesList(channel?.id));
   }, [dispatch, channel]);
-  console.log(channel);
 
   switch (channel?.channel_type) {
     case CHANNEL_TYPES_LIST.GUILD_CATEGORY:

@@ -1,6 +1,6 @@
-import { styled } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
+import styled from "styled-components";
 import Header from "../components/Header/Header";
 import MessageInput from "../components/MessageInput";
 import MessageWrapper from "../components/MessagesWrapper";

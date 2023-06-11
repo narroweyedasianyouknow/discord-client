@@ -1,5 +1,5 @@
-import { styled } from "@mui/material";
 import React, { useEffect, useRef } from "react";
+import styled from "styled-components";
 import Portal from "@/Portal";
 import type { ColorsListType } from "../Typography/Typography";
 export const DialogInner = styled("div")`
@@ -8,9 +8,9 @@ export const DialogInner = styled("div")`
   max-width: 480px;
   width: 100%;
 `;
-const DialogContainer = styled("div", {
+const DialogContainer = styled("div").withConfig({
   shouldForwardProp(propName) {
-    return propName !== "bgColor";
+    return !["bgColor"].includes(propName);
   },
 })<{
   bgColor?: ColorsListType;
@@ -61,9 +61,9 @@ export default function DialogWrapper(props: {
   }, [onClose]);
   useEffect(() => {
     if (bgColor && rootItem.current) {
-      rootItem.current.style.backgroundColor = `var(${bgColor})`
+      rootItem.current.style.backgroundColor = `var(${bgColor})`;
     }
-  },[bgColor])
+  }, [bgColor]);
   return (
     <>
       <Portal active={active} root={rootItem.current}>

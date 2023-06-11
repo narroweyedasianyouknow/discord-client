@@ -1,5 +1,5 @@
-import { styled } from "@mui/material";
 import dayjs from "dayjs";
+import styled from "styled-components";
 import Typography from "../Typography/Typography";
 
 const StickyItemWrapper = styled("div")`
@@ -8,7 +8,7 @@ const StickyItemWrapper = styled("div")`
   justify-content: center;
   margin-top: 10px;
 `;
-const StickyItemBlock = styled("div", {
+const StickyItemBlock = styled("div").withConfig({
   shouldForwardProp: (props) => props !== "hidden",
 })<{ hidden: boolean }>((props) => ({
   display: "inline-flex",

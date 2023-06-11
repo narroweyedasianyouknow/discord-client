@@ -1,8 +1,9 @@
-import { styled } from "@mui/system";
+import styled from "styled-components";
 import type { IHeader } from ".";
 
-const Wrapper = styled("div", {
-  shouldForwardProp: (props) => !["padding", "borderColor"].some((v) => v === props),
+const Wrapper = styled("div").withConfig({
+  shouldForwardProp: (props) =>
+    !["padding", "borderColor"].some((v) => v === props),
 })<{ padding: string; borderColor: "body" | "sidebar" }>`
   display: flex;
   align-items: center;

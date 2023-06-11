@@ -1,4 +1,4 @@
-import { styled } from "@mui/material";
+import styled from "styled-components";
 
 export type ColorsListType =
   | "transparent"
@@ -23,9 +23,9 @@ export type ColorsListType =
   | "--divider-primary"
   | "--divider-body";
 
-const Typography = styled("span", {
+const Typography = styled("span").withConfig({
   shouldForwardProp: (props) =>
-    !["fontWeight", "color", "fontSize", "textTransform", "asBlock", 'sx'].some(
+    !["fontWeight", "color", "fontSize", "textTransform", "asBlock", "sx"].some(
       (val) => val === props
     ),
 })<{

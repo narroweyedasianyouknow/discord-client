@@ -1,7 +1,9 @@
 import type { GuildType, PersonType } from "./GuildsList/guild";
-import type { ChannelType, IChat } from "./components/ChannelsList/channels.interface";
+import type {
+  ChannelType,
+  IChat,
+} from "./components/ChannelsList/channels.interface";
 import type { MessagesType } from "./components/messages.interface";
-import type { IMessage } from "./interfaces";
 
 class API {
   static getURI() {
@@ -45,9 +47,9 @@ class MessageAPI extends API {
     return this.useRequest<{ response: boolean }>("POST", "messages", props);
   }
   getMessages(props: { id: string }) {
-    return this.useRequest<{ response: IMessage[] }>(
+    return this.useRequest<{ response: MessagesType[] }>(
       "POST",
-      "message/get",
+      "messages/get",
       props
     );
   }
@@ -79,6 +81,44 @@ class UploadAPI extends API {
         rej();
       }
     });
+  }
+  uploadFiles({ file }: { file: HTMLInputElement["files"] }) {
+    return new Promise(
+      (
+        res: (
+          data: {
+            filename: string;
+            mimetype: string;
+            size: number;
+          }[]
+        ) => void,
+        rej
+      ) => {
+        if (file && file[0]) {
+          const formData = new FormData();
+
+          for (let i = 0; file.length > i; i++) {
+            const _file = file.item(i);
+            if (_file) {
+              formData.append("files", _file);
+            }
+          }
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", `http://localhost:3000/avatar/files`, true);
+          xhr.onload = function (e: any) {
+            try {
+              res(JSON.parse(e.target.response).response);
+            } catch (e) {
+              console.log("e", e);
+              rej(e);
+            }
+          };
+          xhr.send(formData);
+        } else {
+          rej();
+        }
+      }
+    );
   }
 }
 class GuildsAPI extends API {

@@ -1,6 +1,6 @@
-import { styled } from "@mui/material";
 import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 import { useAppDispatch } from "@/store";
 import { loginAction } from "@/store/storeSlice";
 import Button from "../Button/Button";
@@ -90,7 +90,7 @@ export default function DialogLogin() {
   };
   return (
     <>
-      <DialogInner sx={{}} onSubmit={handleSubmit}>
+      <DialogInner onSubmit={handleSubmit}>
         <Header>
           <div>
             <Typography fontSize="24px" fontWeight={600}>
@@ -114,9 +114,9 @@ export default function DialogLogin() {
           text={t("profile.label.password")}
         />
         <Button
-          sx={{
-            mt: "8px",
-          }}
+          // sx={{
+          //   mt: "8px",
+          // }}
           type="submit"
         >
           {t("button.login")}
@@ -171,9 +171,9 @@ export function DialogRegister() {
             e.preventDefault();
             //
           }}
-          sx={{
-            mt: "16px",
-          }}
+          // sx={{
+          //   mt: "16px",
+          // }}
           type="submit"
         >
           {t("button.continue")}

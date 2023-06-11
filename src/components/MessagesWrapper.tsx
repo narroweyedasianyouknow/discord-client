@@ -1,5 +1,5 @@
-import { styled } from "@mui/material";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
+import styled from "styled-components";
 import { addEventListener } from "../events";
 import { useAppSelector } from "../store";
 import { storeSelector } from "../store/storeSelector";
@@ -93,37 +93,10 @@ const MessageWrapper = () => {
   useEffect(() => {
     changeScrollbarHeight();
   }, []);
-
-  const groupedMessages = useMemo(() => {
-    const groups: { [date: string]: MessagesType[] } = {};
-    const isNewMessage = false;
-
-    messages.forEach((message) => {
-      const messageDate = new Date(+message.nonce).toDateString();
-      // if (message.state === "unread" && !isNewMessage) {
-      //   groups[messageDate].push({
-      //     id: "new-message-marker",
-      //     ts: 0,
-      //     subject_id: "",
-      //     user_id: "",
-      //     user_name: "",
-      //     text_content: "New Message",
-      //   });
-      //   isNewMessage = true;
-      // }
-      if (groups[messageDate]) {
-        groups[messageDate].push(message);
-      } else {
-        groups[messageDate] = [message];
-      }
-    });
-
-    return groups;
-  }, [messages]);
   return (
     <>
       <div className="chat-body-scroll" ref={ref}>
-        {Object.entries(groupedMessages).map(([date, messages]) => (
+        {Object.entries(messages).map(([date, messages]) => (
           <section date-day={date} key={date}>
             <StickyItem ts={date} />
             {messages.map((message: JSX.IntrinsicAttributes & MessagesType) =>

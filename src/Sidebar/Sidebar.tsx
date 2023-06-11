@@ -1,4 +1,4 @@
-import { styled } from "@mui/material";
+import styled from "styled-components";
 import guildsSelector from "@/GuildsList/guildsSelector";
 import { useAppSelector } from "@/store";
 import ChannelsList from "../components/ChannelsList/ChannelsList";

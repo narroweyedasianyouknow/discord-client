@@ -7,6 +7,6 @@ export const messagesSelector = {
       (store: RootState) => store.messages,
       (store: RootState) => store.store.activeChannel ?? "",
     ],
-    (messages, id) => (id in messages ? messages[id] : [])
+    (messages, id) => (id in messages ? messages[id] : {})
   )
 };

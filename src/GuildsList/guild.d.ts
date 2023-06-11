@@ -1,6 +1,6 @@
 
 export type GuildType = {
-  id: number; //	the guilds's id	identify
+  id: string; //	the guilds's id	identify
   name: string; //guild name (2-100 characters, excluding trailing and leading whitespace)
   icon?: string; //icon hash
   icon_hash?: string; //	icon hash, returned when in the template object

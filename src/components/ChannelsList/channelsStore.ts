@@ -6,9 +6,9 @@ const guildsEntity = createEntityAdapter<ChannelType>({
   selectId: (val) => val.id,
 });
 const initialState: {
-  [name: number]: {
-    ids: number[];
-    entities: Record<number, ChannelType>;
+  [name: string]: {
+    ids: string[];
+    entities: Record<string, ChannelType>;
   };
 } = {};
 export const channelsStorage = createSlice({
@@ -18,7 +18,7 @@ export const channelsStorage = createSlice({
   extraReducers: (builder) =>
     builder.addCase(fetchGuildsList.fulfilled, (state, action) => {
       const normalizeChannels = (channels: ChannelType[]) => {
-        const returnValue: Record<number, ChannelType> = {};
+        const returnValue: Record<string, ChannelType> = {};
         for (const channel of channels) {
           returnValue[channel.id] = channel;
         }

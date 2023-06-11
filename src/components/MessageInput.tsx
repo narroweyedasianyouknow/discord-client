@@ -24,32 +24,43 @@ const Input = styled.input`
   font-size: 16px;
   font-weight: 400;
   background-color: var(--bg-second);
+
+  grid-area: 2 / 2 / 3 / 3;
+
   &::placeholder {
     color: var(--header-light);
     user-select: none;
   }
 `;
 const InputWrapper = styled.div`
-  height: 44px;
   border-radius: 8px;
   overflow: hidden;
-  display: flex;
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+
   align-items: center;
-  justify-content: center;
 `;
 const Button = styled.div`
-  height: 44px;
+  height: 100%;
   width: 44px;
   background-color: var(--bg-second);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 1px;
+  grid-area: 2 / 1 / 3 / 2;
+  cursor: pointer;
+`;
+const FilesList = styled.div`
+  grid-area: 1 / 1 / 2 / 3;
 `;
 const { getActiveChannel } = storeSelector;
 const MessageInput = () => {
   const { t } = useTranslation();
   const channel = useAppSelector(getActiveChannel);
+  const [attachments, setAttachments] = useState<string[]>([]);
   const [value, setValue] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -64,24 +75,44 @@ const MessageInput = () => {
     if (value.length > 0 && channel) {
       new API().message().addMessage({
         channel_id: channel.id,
+        nonce: +new Date(),
         content: value,
-        timestamp: 0,
         tts: false,
         mention_everyone: false,
         mentions: [],
         mention_roles: [],
-        attachments: [],
+        attachments: attachments,
         pinned: false,
         type: 0,
       });
       setValue("");
     }
   };
+
+  const handleUploadClick = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.multiple = true;
+    input.onchange = (e) => {
+      const elem = e.target as HTMLInputElement;
+      const files = elem.files;
+      if (files) {
+        new API()
+          .upload()
+          .uploadFiles({ file: files })
+          .then((res) => {
+            setAttachments(res.map((v) => v.filename));
+          });
+      }
+    };
+    input.click();
+  };
   return (
     <>
       <Form onSubmit={handleSubmit}>
         <InputWrapper>
-          <Button>
+          <FilesList></FilesList>
+          <Button onClick={handleUploadClick}>
             <AddFilledIcon />
           </Button>
           <Input

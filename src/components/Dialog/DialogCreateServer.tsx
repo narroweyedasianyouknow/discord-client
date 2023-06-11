@@ -45,7 +45,7 @@ export default function DialogCreateServer() {
   };
 
   const handleSubmit = () => {
-    new API().guilds().createGuild(values.current);
+    API.guilds().createGuild(values.current);
   };
   return (
     <>

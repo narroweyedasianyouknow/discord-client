@@ -11,7 +11,7 @@ export const fetchGuildsList = createAsyncThunk<
   (GuildType & { channels: ChannelType[] })[],
   undefined
 >("guildsStorage/fetchGuilds", async () => {
-  const guilds = await new API().guilds().getMyGuilds();
+  const guilds = await API.guilds().getMyGuilds();
   return guilds.response;
 });
 

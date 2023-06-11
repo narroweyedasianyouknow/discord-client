@@ -29,6 +29,7 @@ const MessageWrapper = styled.div`
 `;
 const MessageContent = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 const TextWrapper = styled.div`
   word-wrap: break-word;
@@ -46,6 +47,9 @@ const Time = styled.span`
 const MessageHeader = styled.div`
   display: flex;
   grid-area: 1 / 2 / 2 / 3;
+`;
+const AttachmentsWrapper = styled.div`
+  display: flex;
 `;
 
 const TimeStamp = (props: { ts: number }) => {
@@ -69,8 +73,8 @@ const TimeStamp = (props: { ts: number }) => {
   );
 };
 const MessageItem: FC<MessagesType & { fromMe?: boolean }> = (props) => {
-  const { content, author, nonce } = props;
-
+  const { content, author, nonce, attachments } = props;
+  // console.log(attachments)
   return (
     <>
       <MessageContainer>
@@ -87,6 +91,17 @@ const MessageItem: FC<MessagesType & { fromMe?: boolean }> = (props) => {
         <MessageWrapper>
           <MessageContent>
             <TextWrapper>{content}</TextWrapper>
+            <AttachmentsWrapper>
+              {attachments.map((v) => {
+                return (
+                  <img
+                    key={v.filename}
+                    // TODO STORE URI IN ENV
+                    src={`http://localhost:3000/uploads/${v.filename}`}
+                  />
+                );
+              })}
+            </AttachmentsWrapper>
           </MessageContent>
         </MessageWrapper>
       </MessageContainer>

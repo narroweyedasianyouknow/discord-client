@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import dayjs from "dayjs";
 import type { RootState } from "@/store";
 import API from "../api";
 import {
@@ -14,7 +15,7 @@ export const fetchMessagesList = createAsyncThunk<MessagesType[], string>(
   "messagesStorage/fetchMessages",
   async (payload) => {
     if (!payload || fetchedList.has(payload)) return [];
-    const messages = await new API().message().getMessages({
+    const messages = await API.message().getMessages({
       id: payload,
     });
     fetchedList.add(payload);
@@ -60,7 +61,9 @@ export const messagesStorage = createSlice({
         store[channel_id] = {
           [time]: [],
         };
-      if (!(time in store[channel_id])) store[channel_id][time] = [];
+      if (!(time in store[channel_id])) {
+        store[channel_id] = Object.assign({ [time]: [] }, store[channel_id]);
+      }
       store[channel_id][time].push(payload);
       // if (payload.fromMe) dispatchCustomEvent("scroll-to-bottom");
     },
@@ -71,13 +74,16 @@ export const messagesStorage = createSlice({
         const messages = action.payload;
         for (const message of messages) {
           const { channel_id, timestamp } = message;
-          const time = new Date(+timestamp).toDateString();
+          const time = dayjs(+timestamp).format("YYYY-MM-DD");
+
           if (!(channel_id in store))
             store[channel_id] = {
               [time]: [],
             };
-          if (!(time in store[channel_id])) store[channel_id][time] = [];
-          store[channel_id][time].push(message);
+          if (!(time in store[channel_id])) {
+            store[channel_id][time] = [];
+          }
+          store[channel_id][time].unshift(message);
         }
 
         // dispatchCustomEvent("scroll-to-bottom", {

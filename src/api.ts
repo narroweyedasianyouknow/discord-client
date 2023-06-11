@@ -6,11 +6,11 @@ import type {
 import type { MessagesType } from "./components/messages.interface";
 
 class API {
-  static getURI() {
+  protected static getURI() {
     return "http://localhost:3000/";
   }
 
-  useRequest<T>(method: string, path = "", params?: unknown): Promise<T> {
+  protected useRequest<T>(method: string, path = "", params?: unknown): Promise<T> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       const url = `${API.getURI()}${path}`;
@@ -26,22 +26,23 @@ class API {
     });
   }
 
-  message() {
+  static message() {
     return new MessageAPI();
   }
-  chats() {
+  static chats() {
     return new ChatsAPI();
   }
-  guilds() {
+  static guilds() {
     return new GuildsAPI();
   }
-  profile() {
+  static profile() {
     return new ProfileAPI();
   }
-  upload() {
+  static upload() {
     return new UploadAPI();
   }
 }
+
 class MessageAPI extends API {
   addMessage(props: Partial<MessagesType>) {
     return this.useRequest<{ response: boolean }>("POST", "messages", props);

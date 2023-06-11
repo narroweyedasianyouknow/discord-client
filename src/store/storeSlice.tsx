@@ -9,7 +9,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export const fetchProfile = createAsyncThunk<{ response: PersonType }>(
   "mainStore/fetchProfile",
   async () => {
-    return await new API().profile().get();
+    return await API.profile().get();
   }
 );
 export const loginAction = createAsyncThunk<
@@ -20,7 +20,7 @@ export const loginAction = createAsyncThunk<
     password: string;
   }
 >("mainStore/loginAction", async (payload) => {
-  return await new API().profile().login(payload);
+  return await API.profile().login(payload);
 });
 export const createChatAction = createAsyncThunk<
   { response: IChat },
@@ -28,7 +28,7 @@ export const createChatAction = createAsyncThunk<
     title: string;
   }
 >("chatsStorage/create", (payload) => {
-  return new API().chats().createChat(payload);
+  return API.chats().createChat(payload);
 });
 
 const initialState: {

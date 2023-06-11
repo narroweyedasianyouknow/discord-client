@@ -5,6 +5,7 @@ import API from "@/api";
 import AddFilledIcon from "../icons/AddFilledIcon";
 import { useAppSelector } from "../store";
 import { storeSelector } from "../store/storeSelector";
+import type { AttachmentType } from "./messages.interface";
 
 const Form = styled.form`
   width: 100%;
@@ -60,7 +61,7 @@ const { getActiveChannel } = storeSelector;
 const MessageInput = () => {
   const { t } = useTranslation();
   const channel = useAppSelector(getActiveChannel);
-  const [attachments, setAttachments] = useState<string[]>([]);
+  const [attachments, setAttachments] = useState<AttachmentType[]>([]);
   const [value, setValue] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -73,7 +74,7 @@ const MessageInput = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (value.length > 0 && channel) {
-      new API().message().addMessage({
+      API.message().addMessage({
         channel_id: channel.id,
         nonce: +new Date(),
         content: value,
@@ -97,11 +98,10 @@ const MessageInput = () => {
       const elem = e.target as HTMLInputElement;
       const files = elem.files;
       if (files) {
-        new API()
-          .upload()
+        API.upload()
           .uploadFiles({ file: files })
           .then((res) => {
-            setAttachments(res.map((v) => v.filename));
+            setAttachments(res);
           });
       }
     };

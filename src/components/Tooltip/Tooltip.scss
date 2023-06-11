@@ -1,0 +1,65 @@
+#tooltip-arrow {
+    color: var(--alert)
+}
+
+.tooltip {
+    width: fit-content;
+    position: absolute;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 14px;
+
+    cursor: pointer !important;
+
+    .arrow {
+        position: absolute;
+        left: calc(50% - 8px);
+    }
+
+
+    &--arrow {
+        &-bottom {
+            .arrow {
+                top: auto;
+                bottom: -2px;
+                transform: rotate(180deg);
+            }
+        }
+
+        &-top {
+            .arrow {
+                top: -2px;
+                bottom: auto;
+            }
+        }
+        &-left {
+            .arrow {
+                top: calc(50% - 7px);
+                bottom: auto;
+                left: -4px;
+                transform: rotate(270deg);
+            }
+        }
+        &-right {
+            .arrow {
+                top: calc(50% - 7px);
+                bottom: auto;
+                left: auto;
+                right: -4px;
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    .tooltip__title {
+        background-color: var(--alert);
+        border-radius: 4px;
+        padding: 5px;
+    }
+}
+
+.tooltip__wrap {
+
+    position: relative;
+}

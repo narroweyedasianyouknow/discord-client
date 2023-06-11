@@ -1,0 +1,42 @@
+.first {
+  animation: firstAnim 2s infinite;
+}
+.second {
+  animation: secondAnim 2s infinite;
+}
+
+@keyframes firstAnim {
+  from {
+    transform: translate(-100%, -100%) rotate(0deg);
+  }
+  25% {
+    transform: translate(100%, -100%) scale(0.5) rotate(180deg);
+  }
+  50% {
+    transform: translate(100%, 100%) rotate(360deg);
+  }
+  75% {
+    transform: translate(-100%, 100%) scale(0.5) rotate(180deg);
+  }
+  to {
+    transform: translate(-100%, -100%) rotate(360deg);
+  }
+}
+
+@keyframes secondAnim {
+  from {
+    transform: translate(100%, 100%) rotate(0deg);
+  }
+  25% {
+    transform: translate(-100%, 100%) scale(0.5) rotate(180deg);
+  }
+  50% {
+    transform: translate(-100%, -100%) rotate(360deg);
+  }
+  75% {
+    transform: translate(100%, -100%) scale(0.5) rotate(180deg);
+  }
+  to {
+    transform: translate(100%, 100%) rotate(360deg);
+  }
+}

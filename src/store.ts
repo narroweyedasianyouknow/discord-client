@@ -1,10 +1,16 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import guildsReducer from "./GuildsList/guildsStorage";
+import channelsReducer from "./components/ChannelsList/channelsStore";
 import messageReducer from "./components/messagesStorage";
 import mainStoreReducer from "./store/storeSlice";
+import type { TypedUseSelectorHook } from "react-redux";
+
 const reducer = combineReducers({
   messages: messageReducer,
   store: mainStoreReducer,
+  guild: guildsReducer,
+  channels: channelsReducer,
 });
 const setupStore = () => {
   return configureStore({

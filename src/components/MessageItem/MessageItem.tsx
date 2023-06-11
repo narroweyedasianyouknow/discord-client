@@ -1,33 +1,31 @@
-import { FC } from "react";
-import styled from "styled-components";
-import MessageTail from "../../icons/MessageTail";
+import Avatar from "boring-avatars";
 import dayjs from "dayjs";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import styled from "styled-components";
+import Typography from "../Typography/Typography";
+import type { MessagesType } from "../messages.interface";
+import type { FC } from "react";
 import "./MessageItem.scss";
-import { IMessage } from "../../interfaces";
-const MessageContainer = styled.div<{
-  $fromMe?: boolean;
-}>`
-  display: flex;
-  justify-content: ${(props) => (props?.$fromMe ? "flex-end" : "flex-start")};
+
+const MessageContainer = styled.div`
+  display: grid;
+  width: 100%;
+  grid-template-columns: min-content auto;
+  grid-template-rows: repeat(2, min-content);
+  grid-column-gap: 10px;
+  padding: 3px 15px;
+  &:hover {
+    background: var(--bg-chat-body);
+  }
 `;
-const MessageWrapper = styled.div<{
-  $fromMe?: boolean;
-}>`
-  margin: 5px;
-  background-color: ${(props) => (props?.$fromMe ? "#7e6dd1" : "#e4e4e4")};
-  color: ${(props) => (props?.$fromMe ? "#ffffff" : "#000000")};
+const MessageWrapper = styled.div`
   width: fit-content;
-  padding: 6px 8px 6px 10px;
   border-radius: 16px;
   font-size: 16px;
   line-height: 1.3125;
-  border-bottom-left-radius: ${(props) => (props?.$fromMe ? "16px" : "0")};
-  border-bottom-right-radius: ${(props) => (props?.$fromMe ? "0" : "16px")};
   position: relative;
-
-  .message-tail {
-    color: ${(props) => (props?.$fromMe ? "#7e6dd1" : "#e4e4e4")};
-  }
+  grid-area: 2 / 2 / 3 / 3;
 `;
 const MessageContent = styled.div`
   display: flex;
@@ -36,42 +34,59 @@ const TextWrapper = styled.div`
   word-wrap: break-word;
   overflow: hidden;
   word-break: break-all;
+  color: var(--text-80);
 `;
 const Time = styled.span`
   padding-left: 4px;
   font-size: 12px;
   font-weight: 400;
   line-height: 12px;
-  color: #aaaaaa;
+  color: var(--header-light);
 `;
+const MessageHeader = styled.div`
+  display: flex;
+  grid-area: 1 / 2 / 2 / 3;
+`;
+
 const TimeStamp = (props: { ts: number }) => {
   const { ts } = props;
-  // const locale = new Intl.DateTimeFormat().resolvedOptions().locale;
+  const { t } = useTranslation();
+  const day = useMemo(() => {
+    return dayjs(+ts);
+  }, [ts]);
   return (
     <div className="time">
       <div className="hidden">
-        <Time>{dayjs(ts).format("HH:mm")}</Time>
-      </div>
-      <div className="inner">
-        <Time>{dayjs(ts).format("HH:mm")}</Time>
+        <Time>
+          {t("message.format_date", {
+            count: day.isToday() ? 1 : day.isYesterday() ? 2 : 0,
+            time: day.format("HH:mm"),
+            date: day.format("DD/MM/YYYY"),
+          })}
+        </Time>
       </div>
     </div>
   );
 };
-const MessageItem: FC<IMessage & {fromMe?: boolean}> = (props) => {
-  const { fromMe, text_content, ts } = props;
+const MessageItem: FC<MessagesType & { fromMe?: boolean }> = (props) => {
+  const { content, author, nonce } = props;
 
   return (
     <>
-      <MessageContainer $fromMe={fromMe}>
-        <MessageWrapper $fromMe={fromMe}>
-          <MessageTail
-            fromMe={fromMe}
-            className={`message-tail ${fromMe ? "from-me" : ""}`}
-          />
+      <MessageContainer>
+        <div className="avatar">
+          <Avatar name={author?.username} variant="beam" />
+        </div>
+        <MessageHeader>
+          <Typography fontWeight={500} color="--text-90">
+            {author?.username}
+          </Typography>
+          <TimeStamp ts={+nonce} />
+        </MessageHeader>
+
+        <MessageWrapper>
           <MessageContent>
-            <TextWrapper>{text_content}</TextWrapper>
-            <TimeStamp ts={ts} />
+            <TextWrapper>{content}</TextWrapper>
           </MessageContent>
         </MessageWrapper>
       </MessageContainer>

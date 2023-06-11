@@ -1,4 +1,7 @@
-import { styled } from "@mui/material";
+import styled from "styled-components";
+import guildsSelector from "@/GuildsList/guildsSelector";
+import { useAppSelector } from "@/store";
+import ChannelsList from "../components/ChannelsList/ChannelsList";
 import Header from "../components/Header/Header";
 import Typography from "../components/Typography/Typography";
 
@@ -13,17 +16,18 @@ const List = styled("div")`
   background-color: var(--sidebar-primary);
 `;
 
+const { getActiveGuild } = guildsSelector;
 export default function Sidebar() {
+  const activeGuild = useAppSelector(getActiveGuild);
   return (
     <>
       <SidebarWrapper>
-        <Header padding="14px 16px">
-          <Typography fontWeight={700}>
-            {/* TODO: i18n localize */}
-            Messenger App
-          </Typography>
+        <Header type="sidebar" padding="14px 16px">
+          <Typography fontWeight={700}>{activeGuild?.name ?? "Select"}</Typography>
         </Header>
-        <List></List>
+        <List>
+          <ChannelsList />
+        </List>
       </SidebarWrapper>
     </>
   );

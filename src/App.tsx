@@ -1,15 +1,14 @@
 import { useCallback, useEffect } from "react";
 import styled from "styled-components";
-import DialogLogin from "./components/Dialog/DialogLogin";
-import DialogWrapper from "./components/Dialog/DialogWrapper";
 import Loader from "./components/Loader/Loader";
+import Authorization from "./containers/Authorization/Authorization";
 import ChatBody from "./containers/ChatBody/ChatBody";
 import { addMessageStore } from "./containers/ChatBody/MessagesWrapper/messagesStorage";
 import GuildsList from "./containers/GuildsList/GuildsList";
 import Sidebar from "./containers/Sidebar/Sidebar";
 import { useAppDispatch, useAppSelector } from "./store";
+import { fetchProfile } from "./store/storeActions";
 import { storeSelector } from "./store/storeSelector";
-import { fetchProfile } from "./store/storeSlice";
 import socket from "./utils/socketEventListener";
 import type { MessagesType } from "./containers/ChatBody/MessagesWrapper/messages.interface";
 
@@ -40,18 +39,7 @@ function App() {
   }, [addMessage]);
 
   if (!login) {
-    if (profile)
-      return (
-        <DialogWrapper
-          bgColor="--brand-color-560"
-          onClose={() => {
-            //
-          }}
-          active={true}
-        >
-          <DialogLogin />
-        </DialogWrapper>
-      );
+    if (profile) return <Authorization />;
     return <Loader />;
   }
   return (

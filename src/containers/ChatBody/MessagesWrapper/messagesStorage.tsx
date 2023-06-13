@@ -16,7 +16,7 @@ export const messagesStorage = createSlice({
     addMessageStore: (store, action: PayloadAction<MessagesType>) => {
       const payload = action.payload;
       const { channel_id, timestamp } = payload;
-      const time = new Date(+timestamp).toDateString();
+      const time = dayjs(+timestamp).format("YYYY-MM-DD");
       if (!(channel_id in store))
         store[channel_id] = {
           [time]: [],

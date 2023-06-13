@@ -1,12 +1,15 @@
 import { useRef } from "react";
 import styled from "styled-components";
-import API from "@/api";
+import {
+  createGuildAction,
+  joinGuildAction,
+} from "@/containers/GuildsList/guildsActions";
 import UploadIcon from "@/icons/UploadIcon";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { storeSelector } from "@/store/storeSelector";
+import { InputConstructor } from "../../containers/Authorization/components/DialogLogin";
 import Button from "../Button/Button";
 import Typography from "../Typography/Typography";
-import { InputConstructor } from "./DialogLogin";
 import { DialogButtonsWrapper, Dialog, DialogInner } from "./DialogWrapper";
 import type { ChangeEventHandler, MouseEventHandler } from "react";
 
@@ -20,7 +23,9 @@ const UploadAvatarWrapper = styled.div`
   margin-top: 24px;
 `;
 
-export default function DialogCreateServer() {
+export function DialogCreateServer({ onClose }: { onClose: () => void }) {
+  const dispatch = useAppDispatch();
+
   const login = useAppSelector(getProfileLogin);
   const values = useRef({
     name: "",
@@ -45,7 +50,7 @@ export default function DialogCreateServer() {
   };
 
   const handleSubmit = () => {
-    API.guilds().createGuild(values.current);
+    dispatch(createGuildAction(values.current)).then(onClose);
   };
   return (
     <>
@@ -97,6 +102,72 @@ export default function DialogCreateServer() {
 
         <DialogButtonsWrapper>
           <Button onClick={handleSubmit}>Create</Button>
+        </DialogButtonsWrapper>
+      </Dialog>
+    </>
+  );
+}
+export function DialogJoinServer({ onClose }: { onClose: () => void }) {
+  const login = useAppSelector(getProfileLogin);
+  const dispatch = useAppDispatch();
+  const values = useRef({
+    guild_id: "",
+  });
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = e.target.value;
+    values.current.guild_id = value;
+  };
+  const handleSubmit = () => {
+    dispatch(joinGuildAction(values.current)).then(onClose);
+  };
+  return (
+    <>
+      <Dialog sx={{ backgroundColor: "var(--modal-background)" }}>
+        <DialogInner>
+          <Typography
+            sx={{
+              textAlign: "center",
+              color: "var(--primary-860)",
+              mb: 1,
+            }}
+            asBlock
+            fontSize="24px"
+            fontWeight={700}
+          >
+            Customize your server
+          </Typography>
+          <Typography
+            sx={{
+              textAlign: "center",
+              color: "var(--header-secondary)",
+              mt: 1,
+            }}
+            asBlock
+            fontSize="16px"
+          >
+            Give your new server a personality with a name and an icon. You can
+            always change it later.
+          </Typography>
+          <InputConstructor
+            text={"Server Name"}
+            name={""}
+            type={""}
+            defaultValue={`${login}'s server`}
+            onChange={handleChange}
+            description={
+              <Typography color="--text-muted" fontSize="12px">
+                By creating a server, you agree to Discord's{" "}
+                <Typography fontSize="12px" fontWeight={600} color="--blue-bg">
+                  Community Guidelines
+                </Typography>
+              </Typography>
+            }
+          />
+        </DialogInner>
+
+        <DialogButtonsWrapper>
+          <Button onClick={handleSubmit}>Join</Button>
         </DialogButtonsWrapper>
       </Dialog>
     </>

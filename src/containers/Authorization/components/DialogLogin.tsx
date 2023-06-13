@@ -2,9 +2,9 @@ import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useAppDispatch } from "@/store";
-import { loginAction } from "@/store/storeSlice";
-import Button from "../Button/Button";
-import Typography from "../Typography/Typography";
+import { loginAction, registrationAction } from "@/store/storeActions";
+import Button from "../../../components/Button/Button";
+import Typography from "../../../components/Typography/Typography";
 import type { ChangeEventHandler, FormEventHandler } from "react";
 const DialogInner = styled("form")`
   background: var(--bg-body);
@@ -64,7 +64,8 @@ export function InputConstructor(props: {
     </InputWrapper>
   );
 }
-export default function DialogLogin() {
+export default function DialogLogin(props: { onChangeType: () => void }) {
+  const { onChangeType } = props;
   const { t } = useTranslation();
   const values = useRef({
     email: "",
@@ -78,7 +79,6 @@ export default function DialogLogin() {
   };
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    console.log(values);
     const regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
     const val = !regex.test(values.current.email)
       ? {
@@ -113,34 +113,77 @@ export default function DialogLogin() {
           onChange={handleChange}
           text={t("profile.label.password")}
         />
+        <Typography
+          sx={{
+            marginBottom: "20px",
+            marginTop: "4px",
+            cursor: "pointer",
+          }}
+          color="--text-link"
+          fontSize="14px"
+          fontWeight={500}
+        >
+          {t("login.forgot_password")}
+        </Typography>
         <Button
-          // sx={{
-          //   mt: "8px",
-          // }}
+          sx={{
+            marginTop: "8px",
+          }}
           type="submit"
         >
           {t("button.login")}
         </Button>
+        <Typography
+          sx={{
+            marginBottom: "20px",
+            marginTop: "4px",
+            cursor: "pointer",
+          }}
+          color="--header-light"
+          fontSize="14px"
+          fontWeight={500}
+        >
+          {t("login.need_create_account")}
+        </Typography>{" "}
+        <Typography
+          sx={{
+            marginBottom: "20px",
+            marginTop: "4px",
+            cursor: "pointer",
+          }}
+          color="--text-link"
+          fontSize="14px"
+          fontWeight={500}
+          onClick={() => onChangeType()}
+        >
+          {t("login.register_label")}
+        </Typography>
       </DialogInner>
     </>
   );
 }
-export function DialogRegister() {
+export function DialogRegister({ onChangeType }: { onChangeType: () => void }) {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
   const values = useRef({
     email: "",
     password: "",
+    username: "",
   });
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const name = e.target.name as "email" | "password";
+    const name = e.target.name as "email" | "password" | "username";
     const value = e.target.value;
-    if (values.current[name]) {
-      values.current[name] = value;
-    }
+    console.log(values.current, name, values.current[name])
+    values.current[name] = value;
+  };
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    dispatch(registrationAction(values.current));
   };
   return (
     <>
-      <DialogInner>
+      <DialogInner onSubmit={handleSubmit}>
         <Header>
           <div>
             <Typography fontSize="24px" fontWeight={600}>
@@ -156,8 +199,8 @@ export function DialogRegister() {
         />
         <InputConstructor
           onChange={handleChange}
-          type="username"
-          name="text"
+          type="text"
+          name="username"
           text={t("profile.label.username")}
         />
         <InputConstructor
@@ -167,17 +210,26 @@ export function DialogRegister() {
           text={t("profile.label.password")}
         />
         <Button
-          onSubmit={(e) => {
-            e.preventDefault();
-            //
+          sx={{
+            marginTop: "16px",
           }}
-          // sx={{
-          //   mt: "16px",
-          // }}
           type="submit"
         >
           {t("button.continue")}
         </Button>
+        <Typography
+          sx={{
+            marginBottom: "20px",
+            marginTop: "4px",
+            cursor: "pointer",
+          }}
+          color="--text-link"
+          fontSize="14px"
+          fontWeight={500}
+          onClick={() => onChangeType()}
+        >
+          {t("register.already_have_an_account")}
+        </Typography>
       </DialogInner>
     </>
   );

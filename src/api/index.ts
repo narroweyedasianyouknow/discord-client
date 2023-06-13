@@ -1,6 +1,8 @@
-import type { GuildType, PersonType } from "@/containers/GuildsList/guild";
 import type {
-  ChannelType,
+  PersonType,
+  ResponseGuildType,
+} from "@/containers/GuildsList/guild";
+import type {
   IChat,
 } from "../components/ChannelsList/channels.interface";
 import type {
@@ -122,17 +124,25 @@ class GuildsAPI extends API {
   #links = {
     GET_MY_GUILD: "guild/my",
     GUILD_CREATE: "guild/create",
+    JOIN_GUILD: "guild/join",
   };
 
   getMyGuilds() {
     return this.useRequest<{
-      response: (GuildType & { channels: ChannelType[] })[];
+      response: ResponseGuildType[];
     }>("GET", this.#links.GET_MY_GUILD);
   }
   createGuild(props: { name: string; avatar?: string }) {
-    return this.useRequest<{ response: GuildType }>(
+    return this.useRequest<{ response: ResponseGuildType }>(
       "POST",
       this.#links.GUILD_CREATE,
+      props
+    );
+  }
+  joinToGuild(props: { guild_id: string }) {
+    return this.useRequest<{ response: ResponseGuildType }>(
+      "POST",
+      this.#links.JOIN_GUILD,
       props
     );
   }
@@ -140,7 +150,7 @@ class GuildsAPI extends API {
 class ProfileAPI extends API {
   #links = {
     GET_MY_PROFILE: "person/me",
-    REGISTRATION: "person/person",
+    REGISTRATION: "person/create",
     LOGIN: "person/login",
   };
 
@@ -159,7 +169,7 @@ class ProfileAPI extends API {
     username: string;
     email: string;
     password: string;
-    locale: string;
+    locale?: string;
   }) {
     return this.useRequest<{ response: PersonType }>(
       "POST",

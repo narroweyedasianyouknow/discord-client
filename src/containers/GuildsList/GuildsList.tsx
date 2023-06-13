@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import DialogCreateServer from "@/components/Dialog/DialogCreateServer";
+import { DialogCreateServer } from "@/components/Dialog/DialogCreateServer";
 import DialogWrapper from "@/components/Dialog/DialogWrapper";
 import AddIcon from "@/icons/AddIcon";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { setActiveGuild } from "../ChatBody/MessagesWrapper/messagesActions";
 import GuildItem, { GuildItemButton } from "./GuildItem";
-import { fetchGuildsList } from "./guildsActions";
+import { fetchGuildsListAction } from "./guildsActions";
 import guildsSelector from "./guildsSelector";
 import type { EntityId } from "@reduxjs/toolkit";
 
@@ -26,7 +26,7 @@ export default function GuildsList() {
   const ids = useAppSelector(getIds);
   const active = useAppSelector(getActiveGuildId);
   useEffect(() => {
-    dispatch(fetchGuildsList());
+    dispatch(fetchGuildsListAction());
   }, [dispatch]);
   const handleClickGuild = useCallback(
     (id: EntityId) => {
@@ -49,7 +49,7 @@ export default function GuildsList() {
           active={showAddDialog}
           onClose={handleCloseDialog}
         >
-          <DialogCreateServer />
+          <DialogCreateServer onClose={handleCloseDialog} />
         </DialogWrapper>
 
         {ids.map((v) => (

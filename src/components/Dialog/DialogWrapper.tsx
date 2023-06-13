@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import Portal from "@/utils/Portal";
 import type { ColorsListType } from "../Typography/Typography";
+import type { CSSObject } from "styled-components";
+
 export const DialogInner = styled("div")`
   padding: 32px;
   padding-bottom: 0;
@@ -24,9 +26,14 @@ const DialogContainer = styled("div").withConfig({
   borderRadius: "4px",
   zIndex: 1001,
 }));
-export const Dialog = styled("div")`
+export const Dialog = styled("div").withConfig({
+  shouldForwardProp(prop, defaultValidatorFn) {
+    return !['sx'].includes(prop)
+  },
+})<{sx?: CSSObject}>`
   border-radius: 5px;
   overflow: hidden;
+  ${props => props.sx ?? {}}
 `;
 
 export const DialogButtonsWrapper = styled("div")`

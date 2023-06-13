@@ -1,5 +1,9 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import { fetchGuildsList } from "./guildsActions";
+import {
+  createGuildAction,
+  fetchGuildsListAction,
+  joinGuildAction,
+} from "./guildsActions";
 import type { GuildType } from "./guild";
 
 const guildsEntity = createEntityAdapter<GuildType>({
@@ -10,12 +14,21 @@ export const guildsStorage = createSlice({
   initialState: guildsEntity.getInitialState(),
   reducers: {},
   extraReducers: (builder) =>
-    builder.addCase(fetchGuildsList.fulfilled, (state, action) => {
-      guildsEntity.addMany(
-        state,
-        action.payload.map(({ channels, ...v }) => v)
-      );
-    }),
+    builder
+      .addCase(fetchGuildsListAction.fulfilled, (state, action) => {
+        guildsEntity.addMany(
+          state,
+          action.payload.map(({ channels, ...v }) => v)
+        );
+      })
+      .addCase(createGuildAction.fulfilled, (state, action) => {
+        const { channels, id, ...guild } = action.payload;
+        guildsEntity.addOne(state, { id: String(id), ...guild });
+      })
+      .addCase(joinGuildAction.fulfilled, (state, action) => {
+        const { channels, id, ...guild } = action.payload;
+        guildsEntity.addOne(state, { id: String(id), ...guild });
+      }),
 });
 
 const guildsReducer = guildsStorage.reducer;

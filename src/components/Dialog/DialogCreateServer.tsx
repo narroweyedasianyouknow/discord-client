@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import {
   createGuildAction,
@@ -24,11 +25,15 @@ const UploadAvatarWrapper = styled.div`
 `;
 
 export function DialogCreateServer({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+
   const dispatch = useAppDispatch();
 
   const login = useAppSelector(getProfileLogin);
   const values = useRef({
-    name: "",
+    name: t("dialog.default_server_name", {
+      users: login,
+    }),
     avatar: "",
   });
 
@@ -66,7 +71,7 @@ export function DialogCreateServer({ onClose }: { onClose: () => void }) {
             fontSize="24px"
             fontWeight={700}
           >
-            Customize your server
+            {t("dialog.create_server_header")}
           </Typography>
           <Typography
             sx={{
@@ -77,23 +82,22 @@ export function DialogCreateServer({ onClose }: { onClose: () => void }) {
             asBlock
             fontSize="16px"
           >
-            Give your new server a personality with a name and an icon. You can
-            always change it later.
+            {t("dialog.create_server_subtitle")}
           </Typography>
           <UploadAvatarWrapper>
             <UploadIcon onClick={handleUploadClick} />
           </UploadAvatarWrapper>
           <InputConstructor
-            text={"Server Name"}
+            text={t("dialog.input.server_name")}
             name={""}
             type={""}
-            defaultValue={`${login}'s server`}
+            defaultValue={values.current.name}
             onChange={handleChange}
             description={
               <Typography color="--text-muted" fontSize="12px">
-                By creating a server, you agree to Discord's{" "}
+                {t("dialog.creating_server_description")}{" "}
                 <Typography fontSize="12px" fontWeight={600} color="--blue-bg">
-                  Community Guidelines
+                  {t("dialog.link_creating_server_description")}
                 </Typography>
               </Typography>
             }
@@ -101,13 +105,14 @@ export function DialogCreateServer({ onClose }: { onClose: () => void }) {
         </DialogInner>
 
         <DialogButtonsWrapper>
-          <Button onClick={handleSubmit}>Create</Button>
+          <Button onClick={handleSubmit}>{t("button.create")}</Button>
         </DialogButtonsWrapper>
       </Dialog>
     </>
   );
 }
 export function DialogJoinServer({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const login = useAppSelector(getProfileLogin);
   const dispatch = useAppDispatch();
   const values = useRef({
@@ -135,7 +140,7 @@ export function DialogJoinServer({ onClose }: { onClose: () => void }) {
             fontSize="24px"
             fontWeight={700}
           >
-            Customize your server
+            {t("dialog.join_server_header")}
           </Typography>
           <Typography
             sx={{
@@ -146,11 +151,10 @@ export function DialogJoinServer({ onClose }: { onClose: () => void }) {
             asBlock
             fontSize="16px"
           >
-            Give your new server a personality with a name and an icon. You can
-            always change it later.
+            {t("dialog.join_server_subtitle")}
           </Typography>
           <InputConstructor
-            text={"Server Name"}
+            text={t("dialog.input.server_name")}
             name={""}
             type={""}
             defaultValue={`${login}'s server`}
@@ -172,4 +176,15 @@ export function DialogJoinServer({ onClose }: { onClose: () => void }) {
       </Dialog>
     </>
   );
+}
+
+export function DialogAddServer(props: {
+  onClose: () => void;
+  active: "create" | "join" | undefined
+}) {
+  const { active, onClose } = props;
+  if (active === "join") {
+    return <DialogJoinServer onClose={onClose} />;
+  }
+  return <DialogCreateServer onClose={onClose} />;
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
-import Portal from "@/Portal";
+import Portal from "@/utils/Portal";
 import type { ColorsListType } from "../Typography/Typography";
 export const DialogInner = styled("div")`
   padding: 32px;

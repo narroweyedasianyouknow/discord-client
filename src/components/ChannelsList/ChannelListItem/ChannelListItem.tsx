@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
 import Typography from "@/components/Typography/Typography";
-import { fetchMessagesList } from "@/components/messagesStorage";
+import { fetchMessagesList } from "@/containers/ChatBody/MessagesWrapper/messagesActions";
 import HashtagIcon from "@/icons/HashtagIcon";
 import { setActiveChannel } from "@/store/storeSlice";
 import { useAppDispatch, useAppSelector } from "../../../store";

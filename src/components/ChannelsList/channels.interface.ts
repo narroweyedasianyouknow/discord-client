@@ -1,4 +1,4 @@
-import type { PersonType } from "@/GuildsList/guild";
+import type { PersonType } from "@/containers/GuildsList/guild";
 
 export interface IChat {
   id: string;

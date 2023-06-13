@@ -1,9 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
-import guildsReducer from "./GuildsList/guildsStorage";
-import channelsReducer from "./components/ChannelsList/channelsStore";
-import messageReducer from "./components/messagesStorage";
-import mainStoreReducer from "./store/storeSlice";
+import channelsReducer from "../components/ChannelsList/channelsStore";
+import messageReducer from "../containers/ChatBody/MessagesWrapper/messagesStorage";
+import guildsReducer from "../containers/GuildsList/guildsStorage";
+import mainStoreReducer from "./storeSlice";
 import type { TypedUseSelectorHook } from "react-redux";
 
 const reducer = combineReducers({

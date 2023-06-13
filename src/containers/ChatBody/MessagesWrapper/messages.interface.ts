@@ -1,4 +1,4 @@
-import type { PersonType } from "@/GuildsList/guild";
+import type { PersonType } from "@/containers/GuildsList/guild";
 export type AttachmentType = {
   /**
    * @description name of file attached

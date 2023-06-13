@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import Portal from "@/Portal";
+import Portal from "@/utils/Portal";
 import classNames from "@/hooks/classNames";
 import Tooltip from "./Tooltip";
 const tooltipWrap = "tooltip__wrap";

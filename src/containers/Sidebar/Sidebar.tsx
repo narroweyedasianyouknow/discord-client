@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import guildsSelector from "@/GuildsList/guildsSelector";
+import guildsSelector from "@/containers/GuildsList/guildsSelector";
 import { useAppSelector } from "@/store";
-import ChannelsList from "../components/ChannelsList/ChannelsList";
-import Header from "../components/Header/Header";
-import Typography from "../components/Typography/Typography";
+import ChannelsList from "../../components/ChannelsList/ChannelsList";
+import Header from "../../components/Header/Header";
+import Typography from "../../components/Typography/Typography";
 
 const SidebarWrapper = styled("div")`
   width: 100%;

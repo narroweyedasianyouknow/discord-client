@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import type { MessagesType } from "./components/messages.interface";
+import type { MessagesType } from "../containers/ChatBody/MessagesWrapper/messages.interface";
 
 export function uuidv4(): string {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

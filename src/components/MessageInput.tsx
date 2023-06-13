@@ -5,7 +5,7 @@ import API from "@/api";
 import AddFilledIcon from "../icons/AddFilledIcon";
 import { useAppSelector } from "../store";
 import { storeSelector } from "../store/storeSelector";
-import type { AttachmentType } from "./messages.interface";
+import type { AttachmentType } from "../containers/ChatBody/MessagesWrapper/messages.interface";
 
 const Form = styled.form`
   width: 100%;
@@ -55,7 +55,22 @@ const Button = styled.div`
   cursor: pointer;
 `;
 const FilesList = styled.div`
+  display: flex;
+  gap: 5px;
   grid-area: 1 / 1 / 2 / 3;
+`;
+const Attachment = styled.div`
+  display: flex;
+  max-width: 200px;
+  max-height: 200px;
+  background-color: var(--header-primary);
+`;
+const ImageAttachment = styled.img`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  aspect-ratio: 1/1;
+  object-fit: contain;
 `;
 const { getActiveChannel } = storeSelector;
 const MessageInput = () => {
@@ -101,7 +116,7 @@ const MessageInput = () => {
         API.upload()
           .uploadFiles({ file: files })
           .then((res) => {
-            setAttachments(res);
+            setAttachments((prev) => prev.concat(res));
           });
       }
     };
@@ -111,7 +126,16 @@ const MessageInput = () => {
     <>
       <Form onSubmit={handleSubmit}>
         <InputWrapper>
-          <FilesList></FilesList>
+          <FilesList>
+            {attachments.map((v) => (
+              <Attachment>
+                <ImageAttachment
+                  key={v.filename}
+                  src={`http://localhost:3000/uploads/${v.filename}`}
+                />
+              </Attachment>
+            ))}
+          </FilesList>
           <Button onClick={handleUploadClick}>
             <AddFilledIcon />
           </Button>

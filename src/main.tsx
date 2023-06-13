@@ -5,9 +5,9 @@ import isYesterday from "dayjs/plugin/isYesterday";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import App from "./App.tsx";
-import setupStore from "./store.ts";
+import setupStore from "./store/index.ts";
 
-import "./i18n.ts";
+import "@utils/i18n.ts";
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);

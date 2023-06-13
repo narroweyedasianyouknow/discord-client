@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Typography from "../Typography/Typography";
-import type { MessagesType } from "../messages.interface";
+import type { MessagesType } from "../../containers/ChatBody/MessagesWrapper/messages.interface";
 import type { FC } from "react";
 import "./MessageItem.scss";
 
@@ -72,9 +72,9 @@ const TimeStamp = (props: { ts: number }) => {
     </div>
   );
 };
-const MessageItem: FC<MessagesType & { fromMe?: boolean }> = (props) => {
+const MessageItem: FC<MessagesType> = (props) => {
   const { content, author, nonce, attachments } = props;
-  // console.log(attachments)
+
   return (
     <>
       <MessageContainer>
@@ -95,6 +95,7 @@ const MessageItem: FC<MessagesType & { fromMe?: boolean }> = (props) => {
               {attachments.map((v) => {
                 return (
                   <img
+                    loading="lazy"
                     key={v.filename}
                     // TODO STORE URI IN ENV
                     src={`http://localhost:3000/uploads/${v.filename}`}

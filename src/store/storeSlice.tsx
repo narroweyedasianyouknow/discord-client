@@ -1,8 +1,8 @@
+import API from "@api";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PersonType } from "@/GuildsList/guild";
-import { fetchGuildsList } from "@/GuildsList/guildsStorage";
-import { setActiveGuild } from "@/components/messagesStorage";
-import API from "../api";
+import { setActiveGuild } from "@/containers/ChatBody/MessagesWrapper/messagesActions";
+import type { PersonType } from "@/containers/GuildsList/guild";
+import { fetchGuildsList } from "@/containers/GuildsList/guildsActions";
 import type { IChat } from "../components/ChannelsList/channels.interface";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
@@ -55,9 +55,6 @@ export const mainStore = createSlice({
     setActiveChannel: (state, action: PayloadAction<string | undefined>) => {
       state.activeChannel = action.payload;
     },
-    // setActiveGuild: (state, action: PayloadAction<string | undefined>) => {
-    //   state.activeGuild = action.payload;
-    // },
   },
   extraReducers: (builder) =>
     builder

@@ -1,10 +1,7 @@
-import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import { fetchGuildsList } from "@/GuildsList/guildsStorage";
+import { createSlice } from "@reduxjs/toolkit";
+import { fetchGuildsList } from "@/containers/GuildsList/guildsActions";
 import type { ChannelType } from "./channels.interface";
 
-const guildsEntity = createEntityAdapter<ChannelType>({
-  selectId: (val) => val.id,
-});
 const initialState: {
   [name: string]: {
     ids: string[];

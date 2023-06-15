@@ -1,4 +1,6 @@
+import type { ChannelType } from "@/components/ChannelsList/channels.interface";
 
+export type ResponseGuildType = GuildType & {channels: ChannelType[]}
 export type GuildType = {
   id: string; //	the guilds's id	identify
   name: string; //guild name (2-100 characters, excluding trailing and leading whitespace)

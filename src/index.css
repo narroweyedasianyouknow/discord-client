@@ -1070,6 +1070,8 @@ body,
 
   --header-primary: var(--primary-860);
   --modal-footer-background: var(--primary-130);
+  --text-link: var(--blue-345);
+  --background-secondary: var(--primary-630);
   /*  */
   /*  */
 }
@@ -1139,10 +1141,8 @@ body,
     --background-mobile-secondary: var(--primary-630);
     --background-modifier-accent: hsl(var(--primary-500-hsl) / 0.48);
     --background-modifier-active: hsl(var(--primary-500-hsl) / 0.48);
-    --background-modifier-hover: hsl(var(--primary-500-hsl) / 0.3);
     --background-modifier-selected: hsl(var(--primary-500-hsl) / 0.6);
     --background-nested-floating: var(--primary-630);
-    --background-primary: var(--primary-600);
     --background-secondary: var(--primary-630);
     --background-secondary-alt: var(--primary-660);
     --background-tertiary: var(--primary-700);
@@ -1246,8 +1246,6 @@ body,
     --info-warning-text: var(--white-500);
     --input-background: var(--primary-700);
     --input-placeholder-text: var(--input-placeholder-text-dark);
-    --interactive-active: var(--white-500);
-    --interactive-hover: var(--primary-230);
     --interactive-muted: var(--primary-500);
     --live-stage-tile-border: hsl(var(--primary-500-hsl) / 0.6);
     --logo-primary: var(--white-500);
@@ -1287,9 +1285,6 @@ body,
     --scrollbar-thin-track: hsl(var(--black-500-hsl) / 0);
     --spoiler-hidden-background: var(--primary-700);
     --spoiler-revealed-background: var(--primary-660);
-    --status-danger: var(--red-400);
-    --status-danger-background: var(--red-400);
-    --status-danger-text: var(--white-500);
     --status-dnd: var(--red-400);
     --status-idle: var(--yellow-300);
     --status-offline: var(--primary-360);
@@ -1305,7 +1300,6 @@ body,
     --text-link: var(--blue-345);
     --text-link-low-saturation: var(--blue-330);
     --text-muted: var(--primary-360);
-    --text-normal: var(--primary-230);
     --text-positive: var(--green-330);
     --text-warning: var(--yellow-300);
     --textbox-markdown-syntax: var(--primary-360);
@@ -1313,7 +1307,22 @@ body,
       var(--primary-700-hsl) / 0.5
       );
       --white: var(--white-500); */
+    --text-normal: var(--primary-230);
     --header-primary: var(--primary-130);
+    --background-primary: var(--primary-600);
+    --interactive-active: var(--white-500);
+    --interactive-hover: var(--primary-230);
+
+    --status-danger: var(--red-400);
+    --status-danger-background: var(--red-400);
+    --status-danger-text: var(--white-500);
+    --background-modifier-hover: hsl(var(--primary-500-hsl) / 0.3);
+    
+    --guild-header-text-shadow: 0 1px 1px hsl(var(--black-500-hsl)/0.4);
+    --elevation-stroke: 0 0 0 1px hsl(var(--primary-900-hsl)/0.15);
+    --elevation-low: 0 1px 0 hsl(var(--primary-900-hsl)/0.2),0 1.5px 0 hsl(var(--primary-860-hsl)/0.05),0 2px 0 hsl(var(--primary-900-hsl)/0.05);
+    --elevation-medium: 0 4px 4px hsl(var(--black-500-hsl)/0.16);
+    --elevation-high: 0 8px 16px hsl(var(--black-500-hsl)/0.24);
   }
 }
 * {

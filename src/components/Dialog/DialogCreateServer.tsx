@@ -1,12 +1,16 @@
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import API from "@/api";
+import {
+  createGuildAction,
+  joinGuildAction,
+} from "@/containers/GuildsList/guildsActions";
 import UploadIcon from "@/icons/UploadIcon";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { storeSelector } from "@/store/storeSelector";
+import { InputConstructor } from "../../containers/Authorization/components/DialogLogin";
 import Button from "../Button/Button";
 import Typography from "../Typography/Typography";
-import { InputConstructor } from "./DialogLogin";
 import { DialogButtonsWrapper, Dialog, DialogInner } from "./DialogWrapper";
 import type { ChangeEventHandler, MouseEventHandler } from "react";
 
@@ -20,10 +24,16 @@ const UploadAvatarWrapper = styled.div`
   margin-top: 24px;
 `;
 
-export default function DialogCreateServer() {
+export function DialogCreateServer({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+
+  const dispatch = useAppDispatch();
+
   const login = useAppSelector(getProfileLogin);
   const values = useRef({
-    name: "",
+    name: t("dialog.default_server_name", {
+      users: login,
+    }),
     avatar: "",
   });
 
@@ -45,7 +55,7 @@ export default function DialogCreateServer() {
   };
 
   const handleSubmit = () => {
-    new API().guilds().createGuild(values.current);
+    dispatch(createGuildAction(values.current)).then(onClose);
   };
   return (
     <>
@@ -61,7 +71,7 @@ export default function DialogCreateServer() {
             fontSize="24px"
             fontWeight={700}
           >
-            Customize your server
+            {t("dialog.create_server_header")}
           </Typography>
           <Typography
             sx={{
@@ -72,14 +82,79 @@ export default function DialogCreateServer() {
             asBlock
             fontSize="16px"
           >
-            Give your new server a personality with a name and an icon. You can
-            always change it later.
+            {t("dialog.create_server_subtitle")}
           </Typography>
           <UploadAvatarWrapper>
             <UploadIcon onClick={handleUploadClick} />
           </UploadAvatarWrapper>
           <InputConstructor
-            text={"Server Name"}
+            text={t("dialog.input.server_name")}
+            name={""}
+            type={""}
+            defaultValue={values.current.name}
+            onChange={handleChange}
+            description={
+              <Typography color="--text-muted" fontSize="12px">
+                {t("dialog.creating_server_description")}{" "}
+                <Typography fontSize="12px" fontWeight={600} color="--blue-bg">
+                  {t("dialog.link_creating_server_description")}
+                </Typography>
+              </Typography>
+            }
+          />
+        </DialogInner>
+
+        <DialogButtonsWrapper>
+          <Button onClick={handleSubmit}>{t("button.create")}</Button>
+        </DialogButtonsWrapper>
+      </Dialog>
+    </>
+  );
+}
+export function DialogJoinServer({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+  const login = useAppSelector(getProfileLogin);
+  const dispatch = useAppDispatch();
+  const values = useRef({
+    guild_id: "",
+  });
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = e.target.value;
+    values.current.guild_id = value;
+  };
+  const handleSubmit = () => {
+    dispatch(joinGuildAction(values.current)).then(onClose);
+  };
+  return (
+    <>
+      <Dialog sx={{ backgroundColor: "var(--modal-background)" }}>
+        <DialogInner>
+          <Typography
+            sx={{
+              textAlign: "center",
+              color: "var(--primary-860)",
+              mb: 1,
+            }}
+            asBlock
+            fontSize="24px"
+            fontWeight={700}
+          >
+            {t("dialog.join_server_header")}
+          </Typography>
+          <Typography
+            sx={{
+              textAlign: "center",
+              color: "var(--header-secondary)",
+              mt: 1,
+            }}
+            asBlock
+            fontSize="16px"
+          >
+            {t("dialog.join_server_subtitle")}
+          </Typography>
+          <InputConstructor
+            text={t("dialog.input.server_name")}
             name={""}
             type={""}
             defaultValue={`${login}'s server`}
@@ -96,9 +171,20 @@ export default function DialogCreateServer() {
         </DialogInner>
 
         <DialogButtonsWrapper>
-          <Button onClick={handleSubmit}>Create</Button>
+          <Button onClick={handleSubmit}>Join</Button>
         </DialogButtonsWrapper>
       </Dialog>
     </>
   );
+}
+
+export function DialogAddServer(props: {
+  onClose: () => void;
+  active: "create" | "join" | undefined
+}) {
+  const { active, onClose } = props;
+  if (active === "join") {
+    return <DialogJoinServer onClose={onClose} />;
+  }
+  return <DialogCreateServer onClose={onClose} />;
 }

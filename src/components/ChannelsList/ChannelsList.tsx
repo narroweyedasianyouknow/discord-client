@@ -4,7 +4,7 @@ import { useAppSelector } from "../../store";
 import ChannelListItem from "./ChannelListItem/ChannelListItem";
 import { channelsSelector } from "./channelsSelector";
 
-const { getChatsIds, getActiveId } = channelsSelector;
+const { getChannelsIds, getActiveId } = channelsSelector;
 
 const ChannelListWrapper = styled.div`
   display: flex;
@@ -16,16 +16,16 @@ const ChannelListWrapper = styled.div`
 `;
 
 const ChannelsList = () => {
-  const ids = useAppSelector(getChatsIds);
+  const ids = useAppSelector(getChannelsIds);
   const active = useAppSelector(getActiveId);
-  const chats = useMemo(() => {
+  const channels = useMemo(() => {
     return ids.map((channel) => (
       <ChannelListItem active={active} key={channel} id={channel} />
     ));
   }, [ids, active]);
   return (
     <>
-      <ChannelListWrapper>{chats}</ChannelListWrapper>
+      <ChannelListWrapper>{channels}</ChannelListWrapper>
     </>
   );
 };

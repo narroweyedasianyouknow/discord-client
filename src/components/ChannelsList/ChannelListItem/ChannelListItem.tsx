@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
-import { fetchMessagesList } from "@/components/messagesStorage";
-import HashtagIcon from "../../../icons/HashtagIcon";
+import Typography from "@/components/Typography/Typography";
+import { fetchMessagesList } from "@/containers/ChatBody/MessagesWrapper/messagesActions";
+import HashtagIcon from "@/icons/HashtagIcon";
+import { setActiveChannel } from "@/store/storeSlice";
 import { useAppDispatch, useAppSelector } from "../../../store";
-import { setActiveChannel } from "../../../store/storeSlice";
-import Typography from "../../Typography/Typography";
 import { CHANNEL_TYPES_LIST } from "../channels.interface";
 import { channelsSelector } from "../channelsSelector";
 

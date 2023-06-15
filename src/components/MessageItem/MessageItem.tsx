@@ -3,8 +3,9 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { ATTACHMENTS_URI } from "@/constants";
 import Typography from "../Typography/Typography";
-import type { MessagesType } from "../messages.interface";
+import type { MessagesType } from "../../containers/ChatBody/MessagesWrapper/messages.interface";
 import type { FC } from "react";
 import "./MessageItem.scss";
 
@@ -29,6 +30,7 @@ const MessageWrapper = styled.div`
 `;
 const MessageContent = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 const TextWrapper = styled.div`
   word-wrap: break-word;
@@ -46,6 +48,17 @@ const Time = styled.span`
 const MessageHeader = styled.div`
   display: flex;
   grid-area: 1 / 2 / 2 / 3;
+`;
+const AttachmentsWrapper = styled.div`
+  display: flex;
+
+  img {
+    display: block;
+    object-fit: cover;
+    min-width: 100%;
+    min-height: 100%;
+    max-width: 100%;
+  }
 `;
 
 const TimeStamp = (props: { ts: number }) => {
@@ -68,8 +81,8 @@ const TimeStamp = (props: { ts: number }) => {
     </div>
   );
 };
-const MessageItem: FC<MessagesType & { fromMe?: boolean }> = (props) => {
-  const { content, author, nonce } = props;
+const MessageItem: FC<MessagesType> = (props) => {
+  const { content, author, nonce, attachments } = props;
 
   return (
     <>
@@ -87,6 +100,17 @@ const MessageItem: FC<MessagesType & { fromMe?: boolean }> = (props) => {
         <MessageWrapper>
           <MessageContent>
             <TextWrapper>{content}</TextWrapper>
+            <AttachmentsWrapper>
+              {attachments.map((v) => {
+                return (
+                  <img
+                    loading="lazy"
+                    key={v.filename}
+                    src={`${ATTACHMENTS_URI}${v.filename}`}
+                  />
+                );
+              })}
+            </AttachmentsWrapper>
           </MessageContent>
         </MessageWrapper>
       </MessageContainer>

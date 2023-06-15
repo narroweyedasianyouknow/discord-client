@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import type { CSSObject } from "styled-components";
 
 export type ColorsListType =
   | "transparent"
@@ -21,6 +22,8 @@ export type ColorsListType =
   | "--sidebar-primary"
   | "--sidebar-second"
   | "--divider-primary"
+  | "--text-link"
+  | "--text-normal"
   | "--divider-body";
 
 const Typography = styled("span").withConfig({
@@ -29,6 +32,7 @@ const Typography = styled("span").withConfig({
       (val) => val === props
     ),
 })<{
+  sx?: CSSObject;
   fontWeight?: number;
   fontSize?: string;
   color?: ColorsListType;
@@ -49,6 +53,7 @@ const Typography = styled("span").withConfig({
     textTransform = "none",
     asBlock = false,
     backgroundColor = "transparent",
+    sx = {},
   }) => ({
     fontWeight,
     fontSize,
@@ -59,6 +64,7 @@ const Typography = styled("span").withConfig({
         ? "transparent"
         : `var(${backgroundColor})`,
     display: asBlock ? "block" : "unset",
+    ...sx,
   })
 );
 export default Typography;

@@ -22,7 +22,10 @@
     /* Paths Configs */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@api": ["./src/api/index"],
+      "@store": ["./src/store/index"],
+      "@utils/*": ["./src/utils/*"],
     }
   },
   "include": ["src"],

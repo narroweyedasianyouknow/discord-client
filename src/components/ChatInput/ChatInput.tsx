@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import API from "@/api";
-import AddFilledIcon from "../icons/AddFilledIcon";
-import { useAppSelector } from "../store";
-import { storeSelector } from "../store/storeSelector";
+import AddFilledIcon from "../../icons/AddFilledIcon";
+import { useAppSelector } from "../../store";
+import { storeSelector } from "../../store/storeSelector";
+import InputAttachments from "./InputAttachments";
+import type { AttachmentType } from "../../containers/ChatBody/MessagesWrapper/messages.interface";
 
 const Form = styled.form`
   width: 100%;
@@ -23,8 +25,8 @@ const Input = styled.input`
   padding: 15px;
   font-size: 16px;
   font-weight: 400;
-  background-color: var(--bg-second);
 
+  background-color: var(--bg-second);
   grid-area: 2 / 2 / 3 / 3;
 
   &::placeholder {
@@ -40,6 +42,7 @@ const InputWrapper = styled.div`
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
 
+  background-color: var(--bg-second);
   align-items: center;
 `;
 const Button = styled.div`
@@ -53,14 +56,11 @@ const Button = styled.div`
   grid-area: 2 / 1 / 3 / 2;
   cursor: pointer;
 `;
-const FilesList = styled.div`
-  grid-area: 1 / 1 / 2 / 3;
-`;
 const { getActiveChannel } = storeSelector;
-const MessageInput = () => {
+const ChatInput = () => {
   const { t } = useTranslation();
   const channel = useAppSelector(getActiveChannel);
-  const [attachments, setAttachments] = useState<string[]>([]);
+  const [attachments, setAttachments] = useState<AttachmentType[]>([]);
   const [value, setValue] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -72,8 +72,8 @@ const MessageInput = () => {
     : "";
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (value.length > 0 && channel) {
-      new API().message().addMessage({
+    if ((value.length > 0 || attachments[0]) && channel) {
+      API.message().addMessage({
         channel_id: channel.id,
         nonce: +new Date(),
         content: value,
@@ -86,32 +86,36 @@ const MessageInput = () => {
         type: 0,
       });
       setValue("");
+      setAttachments([]);
     }
   };
 
   const handleUploadClick = () => {
     const input = document.createElement("input");
     input.type = "file";
+    input.accept = "image/*";
     input.multiple = true;
     input.onchange = (e) => {
       const elem = e.target as HTMLInputElement;
       const files = elem.files;
       if (files) {
-        new API()
-          .upload()
+        API.upload()
           .uploadFiles({ file: files })
           .then((res) => {
-            setAttachments(res.map((v) => v.filename));
+            setAttachments((prev) => prev.concat(res));
           });
       }
     };
     input.click();
   };
+  function handleRemove(name: string) {
+    setAttachments((prev) => prev.filter((v) => v.filename !== name));
+  }
   return (
     <>
       <Form onSubmit={handleSubmit}>
         <InputWrapper>
-          <FilesList></FilesList>
+          <InputAttachments onRemove={handleRemove} attachments={attachments} />
           <Button onClick={handleUploadClick}>
             <AddFilledIcon />
           </Button>
@@ -127,4 +131,4 @@ const MessageInput = () => {
   );
 };
 
-export default MessageInput;
+export default ChatInput;

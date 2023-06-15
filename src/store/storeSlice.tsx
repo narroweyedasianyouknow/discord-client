@@ -1,35 +1,14 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PersonType } from "@/GuildsList/guild";
-import { fetchGuildsList } from "@/GuildsList/guildsStorage";
-import { setActiveGuild } from "@/components/messagesStorage";
-import API from "../api";
-import type { IChat } from "../components/ChannelsList/channels.interface";
+import { createSlice } from "@reduxjs/toolkit";
+import { CHANNEL_TYPES_LIST } from "@/components/ChannelsList/channels.interface";
+import { setActiveGuild } from "@/containers/ChatBody/MessagesWrapper/messagesActions";
+import type { PersonType } from "@/containers/GuildsList/guild";
+import {
+  createGuildAction,
+  fetchGuildsListAction,
+  joinGuildAction,
+} from "@/containers/GuildsList/guildsActions";
+import { fetchProfile, loginAction, registrationAction } from "./storeActions";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
-export const fetchProfile = createAsyncThunk<{ response: PersonType }>(
-  "mainStore/fetchProfile",
-  async () => {
-    return await new API().profile().get();
-  }
-);
-export const loginAction = createAsyncThunk<
-  { response: PersonType },
-  {
-    email?: string | undefined;
-    username?: string | undefined;
-    password: string;
-  }
->("mainStore/loginAction", async (payload) => {
-  return await new API().profile().login(payload);
-});
-export const createChatAction = createAsyncThunk<
-  { response: IChat },
-  {
-    title: string;
-  }
->("chatsStorage/create", (payload) => {
-  return new API().chats().createChat(payload);
-});
 
 const initialState: {
   profile?: PersonType;
@@ -55,9 +34,6 @@ export const mainStore = createSlice({
     setActiveChannel: (state, action: PayloadAction<string | undefined>) => {
       state.activeChannel = action.payload;
     },
-    // setActiveGuild: (state, action: PayloadAction<string | undefined>) => {
-    //   state.activeGuild = action.payload;
-    // },
   },
   extraReducers: (builder) =>
     builder
@@ -73,14 +49,33 @@ export const mainStore = createSlice({
       .addCase(fetchProfile.rejected, (state) => {
         state.initialized.profile = true;
       })
-      .addCase(fetchGuildsList.fulfilled, (state) => {
+      .addCase(fetchGuildsListAction.fulfilled, (state) => {
         state.initialized.guilds = true;
       })
-      .addCase(fetchGuildsList.rejected, (state) => {
+      .addCase(fetchGuildsListAction.rejected, (state) => {
         state.initialized.guilds = true;
       })
       .addCase(loginAction.fulfilled, (state, action) => {
         state.profile = action.payload.response;
+      })
+      .addCase(registrationAction.fulfilled, (state, action) => {
+        state.profile = action.payload.response;
+      })
+      .addCase(createGuildAction.fulfilled, (state, action) => {
+        const { id, channels } = action.payload;
+        state.activeGuild = id;
+        const textChannel = channels.find(
+          (v) => v.channel_type === CHANNEL_TYPES_LIST.GUILD_TEXT
+        );
+        state.activeChannel = textChannel?.id;
+      })
+      .addCase(joinGuildAction.fulfilled, (state, action) => {
+        const { id, channels } = action.payload;
+        state.activeGuild = id;
+        const textChannel = channels.find(
+          (v) => v.channel_type === CHANNEL_TYPES_LIST.GUILD_TEXT
+        );
+        state.activeChannel = textChannel?.id;
       }),
 });
 

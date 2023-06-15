@@ -1,14 +1,22 @@
 import React from "react";
 import styled from "styled-components";
 import type { ButtonHTMLAttributes } from "react";
+import type { CSSObject } from "styled-components";
 
 interface IButton {
   children: React.ReactNode;
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
   onSubmit?: ButtonHTMLAttributes<HTMLButtonElement>["onSubmit"];
   onClick?: ButtonHTMLAttributes<HTMLButtonElement>["onClick"];
+  sx?: CSSObject;
 }
-const ButtonWrapper = styled("button")`
+const ButtonWrapper = styled("button").withConfig({
+  shouldForwardProp(prop) {
+    return !["sx"].includes(prop);
+  },
+})<{
+  sx: CSSObject;
+}>`
   border: none;
 
   background-color: var(--brand-color);
@@ -38,6 +46,7 @@ const ButtonWrapper = styled("button")`
   &:hover {
     background-color: var(--brand-color-560);
   }
+  ${(props) => props.sx}
 `;
 const InnerContent = styled("div")`
   margin: 0 auto;
@@ -47,10 +56,10 @@ const InnerContent = styled("div")`
   vertical-align: baseline;
 `;
 export default function Button(props: IButton) {
-  const { children, type, onSubmit, onClick } = props;
+  const { children, type, onSubmit, onClick, sx = {} } = props;
   return (
     <>
-      <ButtonWrapper type={type} onClick={onClick} onSubmit={onSubmit}>
+      <ButtonWrapper sx={sx} type={type} onClick={onClick} onSubmit={onSubmit}>
         <InnerContent>{children}</InnerContent>
       </ButtonWrapper>
     </>

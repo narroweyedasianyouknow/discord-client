@@ -1,7 +1,7 @@
 const UploadIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <>
-      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" {...props}>
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" cursor={'pointer'} {...props}>
         <path
           fillRule="evenodd"
           clipRule="evenodd"

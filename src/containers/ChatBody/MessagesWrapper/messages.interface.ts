@@ -1,4 +1,50 @@
-import type { PersonType } from "@/GuildsList/guild";
+import type { PersonType } from "@/containers/GuildsList/guild";
+export type AttachmentType = {
+  /**
+   * @description name of file attached
+   */
+  filename: string;
+  /**
+   * @description description for the file (max 1024 characters)
+   */
+  description?: string;
+  /**
+   * @description the attachment's media type
+   */
+  content_type?: string;
+  /**
+   * @description size of file in bytes
+   */
+  size: number;
+  // /**
+  //  * @description source url of file
+  //  */
+  // url: string;
+  // /**
+  //  * @description a proxied url of file
+  //  */
+  // proxy_url: string;
+  /**
+   * @description height of file (if image)
+   */
+  height?: number;
+  /**
+   * @description width of file (if image)
+   */
+  width?: number;
+  /**
+   * @description whether this attachment is ephemeral
+   */
+  ephemeral?: boolean;
+  /**
+   * @description the duration of the audio file (currently for voice messages)
+   */
+  duration_secs?: number;
+  /**
+   * @description base64 encoded bytearray representing a sampled waveform (currently for voice messages)
+   */
+  waveform?: string;
+};
 
 export type MessagesType = {
   id: string; //	id of the channel the message was sent in
@@ -12,7 +58,7 @@ export type MessagesType = {
   mentions: any[]; // of user objects	users specifically mentioned in the message
   mention_roles: any[]; // of role object ids	roles specifically mentioned in this message
   mention_channels?: any[]; //	array of channel mention objects	channels specifically mentioned in this message
-  attachments: any[]; //	array of attachment objects	any attached files
+  attachments: AttachmentType[]; //	array of attachment objects	any attached files
   //  embeds: any[]; //	array of embed objects	any embedded content
   //  reactions?: any[]; //	array of reaction objects	reactions to the message
   nonce: number | string; //	integer or string	used for validating a message was sent

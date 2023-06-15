@@ -1,15 +1,14 @@
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { addEventListener } from "../events";
-import { useAppSelector } from "../store";
-import { storeSelector } from "../store/storeSelector";
-import MessageItem from "./MessageItem/MessageItem";
-import StickyItem from "./MessageItem/StickyItem";
+
+import MessageItem from "@/components/MessageItem/MessageItem";
+import StickyItem from "@/components/MessageItem/StickyItem";
+import { useAppSelector } from "@/store";
+import { addEventListener } from "@/utils/events";
 import { messagesSelector } from "./messagesSelector";
 import type { MessagesType } from "./messages.interface";
 
 const { getChatsMessages } = messagesSelector;
-const { getProfileLogin } = storeSelector;
 
 const ScrollbarContainer = styled("div")`
   position: absolute;
@@ -34,7 +33,6 @@ const ScrollbarItem = styled("div")`
 
 const MessageWrapper = () => {
   const messages = useAppSelector(getChatsMessages);
-  const login = useAppSelector(getProfileLogin);
   const ref = useRef<HTMLDivElement>(null);
   const scrollbarRef = useRef<HTMLDivElement>(null);
   const listener = (e: ScrollToOptions | undefined = {}) => {
@@ -103,11 +101,7 @@ const MessageWrapper = () => {
               message.id === "new-message-marker" ? (
                 <StickyItem />
               ) : (
-                <MessageItem
-                  fromMe={message.author === login}
-                  key={`${message?.id}`}
-                  {...message}
-                />
+                <MessageItem key={`${message?.id}`} {...message} />
               )
             )}
           </section>

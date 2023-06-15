@@ -1,19 +1,25 @@
-import type { GuildType, PersonType } from "./GuildsList/guild";
+import { BACKEND_URI } from "@/constants";
 import type {
-  ChannelType,
-  IChat,
-} from "./components/ChannelsList/channels.interface";
-import type { MessagesType } from "./components/messages.interface";
+  PersonType,
+  ResponseGuildType,
+} from "@/containers/GuildsList/guild";
+import type { IChat } from "../components/ChannelsList/channels.interface";
+import type {
+  AttachmentType,
+  MessagesType,
+} from "../containers/ChatBody/MessagesWrapper/messages.interface";
 
 class API {
-  static getURI() {
-    return "http://localhost:3000/";
-  }
+  protected static URI = `${BACKEND_URI}/`;
 
-  useRequest<T>(method: string, path = "", params?: unknown): Promise<T> {
+  protected useRequest<T>(
+    method: string,
+    path = "",
+    params?: unknown
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      const url = `${API.getURI()}${path}`;
+      const url = `${API.URI}${path}`;
       xhr.withCredentials = true;
       xhr.open(method, url);
       xhr.onload = () => resolve(JSON.parse(xhr.responseText));
@@ -26,22 +32,23 @@ class API {
     });
   }
 
-  message() {
+  static message() {
     return new MessageAPI();
   }
-  chats() {
+  static chats() {
     return new ChatsAPI();
   }
-  guilds() {
+  static guilds() {
     return new GuildsAPI();
   }
-  profile() {
+  static profile() {
     return new ProfileAPI();
   }
-  upload() {
+  static upload() {
     return new UploadAPI();
   }
 }
+
 class MessageAPI extends API {
   addMessage(props: Partial<MessagesType>) {
     return this.useRequest<{ response: boolean }>("POST", "messages", props);
@@ -67,7 +74,7 @@ class UploadAPI extends API {
 
         formData.append("file", file[0]);
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", `http://localhost:3000/avatar`, true);
+        xhr.open("POST", `${BACKEND_URI}/avatar`, true);
         xhr.onload = function (e: any) {
           try {
             res(JSON.parse(e.target.response).response);
@@ -83,59 +90,56 @@ class UploadAPI extends API {
     });
   }
   uploadFiles({ file }: { file: HTMLInputElement["files"] }) {
-    return new Promise(
-      (
-        res: (
-          data: {
-            filename: string;
-            mimetype: string;
-            size: number;
-          }[]
-        ) => void,
-        rej
-      ) => {
-        if (file && file[0]) {
-          const formData = new FormData();
+    return new Promise((res: (data: AttachmentType[]) => void, rej) => {
+      if (file && file[0]) {
+        const formData = new FormData();
 
-          for (let i = 0; file.length > i; i++) {
-            const _file = file.item(i);
-            if (_file) {
-              formData.append("files", _file);
-            }
+        for (let i = 0; file.length > i; i++) {
+          const _file = file.item(i);
+          if (_file) {
+            formData.append("files", _file);
           }
-          const xhr = new XMLHttpRequest();
-          xhr.open("POST", `http://localhost:3000/avatar/files`, true);
-          xhr.onload = function (e: any) {
-            try {
-              res(JSON.parse(e.target.response).response);
-            } catch (e) {
-              console.log("e", e);
-              rej(e);
-            }
-          };
-          xhr.send(formData);
-        } else {
-          rej();
         }
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", `${BACKEND_URI}/attachments/files`, true);
+        xhr.onload = function (e: any) {
+          try {
+            res(JSON.parse(e.target.response).response);
+          } catch (e) {
+            console.log("e", e);
+            rej(e);
+          }
+        };
+        xhr.send(formData);
+      } else {
+        rej();
       }
-    );
+    });
   }
 }
 class GuildsAPI extends API {
   #links = {
     GET_MY_GUILD: "guild/my",
     GUILD_CREATE: "guild/create",
+    JOIN_GUILD: "guild/join",
   };
 
   getMyGuilds() {
     return this.useRequest<{
-      response: (GuildType & { channels: ChannelType[] })[];
+      response: ResponseGuildType[];
     }>("GET", this.#links.GET_MY_GUILD);
   }
   createGuild(props: { name: string; avatar?: string }) {
-    return this.useRequest<{ response: GuildType }>(
+    return this.useRequest<{ response: ResponseGuildType }>(
       "POST",
       this.#links.GUILD_CREATE,
+      props
+    );
+  }
+  joinToGuild(props: { guild_id: string }) {
+    return this.useRequest<{ response: ResponseGuildType | string }>(
+      "POST",
+      this.#links.JOIN_GUILD,
       props
     );
   }
@@ -143,7 +147,7 @@ class GuildsAPI extends API {
 class ProfileAPI extends API {
   #links = {
     GET_MY_PROFILE: "person/me",
-    REGISTRATION: "person/person",
+    REGISTRATION: "person/create",
     LOGIN: "person/login",
   };
 
@@ -162,7 +166,7 @@ class ProfileAPI extends API {
     username: string;
     email: string;
     password: string;
-    locale: string;
+    locale?: string;
   }) {
     return this.useRequest<{ response: PersonType }>(
       "POST",

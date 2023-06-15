@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
-import type { MessagesType } from "./components/messages.interface";
+import { BACKEND_URI } from "@/constants";
+import type { MessagesType } from "../containers/ChatBody/MessagesWrapper/messages.interface";
 
 export function uuidv4(): string {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -18,7 +19,7 @@ function getCookie(name: string) {
   if (parts.length === 2) return parts?.pop()?.split(";").shift();
 }
 const socket = (addMessage: (message: MessagesType) => void) => {
-  const socket = io("http://localhost:3000/", {
+  const socket = io(BACKEND_URI, {
     reconnectionDelay: 10000,
     transports: ["websocket"],
     auth: {

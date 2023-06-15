@@ -2,7 +2,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import type { RootState } from "../../store";
 
 export const channelsSelector = {
-  getChatsIds: createSelector(
+  getChannelsIds: createSelector(
     [
       (store: RootState) =>
         store.store.activeGuild

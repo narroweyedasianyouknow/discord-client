@@ -89,16 +89,13 @@ class UploadAPI extends API {
       }
     });
   }
-  uploadFiles({ file }: { file: HTMLInputElement["files"] }) {
+  uploadFiles({ files }: { files: File[] }) {
     return new Promise((res: (data: AttachmentType[]) => void, rej) => {
-      if (file && file[0]) {
+      if (files && files[0]) {
         const formData = new FormData();
 
-        for (let i = 0; file.length > i; i++) {
-          const _file = file.item(i);
-          if (_file) {
-            formData.append("files", _file);
-          }
+        for (const file of files) {
+          formData.append("files", file);
         }
         const xhr = new XMLHttpRequest();
         xhr.open("POST", `${BACKEND_URI}/attachments/files`, true);

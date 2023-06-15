@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { ATTACHMENTS_URI } from "@/constants";
-import type { AttachmentType } from "@/containers/ChatBody/MessagesWrapper/messages.interface";
 import RemoveIcon from "@/icons/RemoveIcon";
 import Typography from "../Typography/Typography";
+// eslint-disable-next-line import/namespace
+import type { ExtendedFile } from "./ChatInput";
 
 const FilesList = styled.div`
   display: flex;
@@ -86,7 +86,7 @@ const ActionIcon = styled.div<{ $removeIcon?: boolean }>`
   }
 `;
 export default function InputAttachments(props: {
-  attachments: AttachmentType[];
+  attachments: ExtendedFile[];
   onRemove: (name: string) => void;
 }) {
   const { attachments, onRemove } = props;
@@ -97,22 +97,34 @@ export default function InputAttachments(props: {
       {attachments.map((v) => (
         <AttachmentItem
           onRemove={() => {
-            onRemove(v.filename);
+            onRemove(v.id);
           }}
-          key={v.filename}
+          key={v.id}
           {...v}
         />
       ))}
     </FilesList>
   );
 }
-type IAttachmentItem = AttachmentType & {
+type IAttachmentItem = ExtendedFile & {
   onRemove: () => void;
 };
-function AttachmentItem({ filename, description, onRemove }: IAttachmentItem) {
+const toBase64 = ({ file }: ExtendedFile) =>
+  new Promise((resolve: (file: string) => void, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () =>
+      typeof reader.result === "string" ? resolve(reader.result) : reject;
+    reader.onerror = reject;
+  });
+function AttachmentItem(props: IAttachmentItem) {
+  const { onRemove, file } = props;
   return (
     <Attachment>
-      <ImageAttachment key={filename} src={`${ATTACHMENTS_URI}${filename}`} />
+      <ImageAttachment
+        key={file.name}
+        src={URL.createObjectURL(file)}
+      />
       <Typography
         sx={{
           marginTop: "8px",
@@ -123,7 +135,7 @@ function AttachmentItem({ filename, description, onRemove }: IAttachmentItem) {
         fontSize="14px"
         color="--text-normal"
       >
-        {description}
+        {file.name}
       </Typography>
       <ActionButtons>
         {/* TODO ADD FUNCTIONAL SPOILER & Edit */}

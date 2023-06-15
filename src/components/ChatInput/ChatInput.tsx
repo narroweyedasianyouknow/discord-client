@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import API from "@/api";
+import { uuidv4 } from "@/utils/socketEventListener";
 import AddFilledIcon from "../../icons/AddFilledIcon";
 import { useAppSelector } from "../../store";
 import { storeSelector } from "../../store/storeSelector";
 import InputAttachments from "./InputAttachments";
-import type { AttachmentType } from "../../containers/ChatBody/MessagesWrapper/messages.interface";
 
 const Form = styled.form`
   width: 100%;
@@ -57,10 +57,15 @@ const Button = styled.div`
   cursor: pointer;
 `;
 const { getActiveChannel } = storeSelector;
+
+export type ExtendedFile = {
+  id: string;
+  file: File;
+};
 const ChatInput = () => {
   const { t } = useTranslation();
   const channel = useAppSelector(getActiveChannel);
-  const [attachments, setAttachments] = useState<AttachmentType[]>([]);
+  const [attachments, setAttachments] = useState<ExtendedFile[]>([]);
   const [value, setValue] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -70,9 +75,12 @@ const ChatInput = () => {
         channel_name: channel.name,
       })
     : "";
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if ((value.length > 0 || attachments[0]) && channel) {
+      const uploadedAttachments = attachments[0] ? await API.upload().uploadFiles({
+        files: attachments.map((v) => v.file),
+      }) : [];
       API.message().addMessage({
         channel_id: channel.id,
         nonce: +new Date(),
@@ -81,7 +89,7 @@ const ChatInput = () => {
         mention_everyone: false,
         mentions: [],
         mention_roles: [],
-        attachments: attachments,
+        attachments: uploadedAttachments,
         pinned: false,
         type: 0,
       });
@@ -97,28 +105,51 @@ const ChatInput = () => {
     input.multiple = true;
     input.onchange = (e) => {
       const elem = e.target as HTMLInputElement;
+      const dataTransfer: ExtendedFile[] = [];
       const files = elem.files;
       if (files) {
-        API.upload()
-          .uploadFiles({ file: files })
-          .then((res) => {
-            setAttachments((prev) => prev.concat(res));
-          });
+        for (const file of files) {
+          if (/^image\//.test(file.type)) {
+            if (file)
+              dataTransfer.push({
+                file,
+                id: uuidv4(),
+              });
+          }
+        }
+      }
+      if (files) {
+        setAttachments((prev) => prev.concat(dataTransfer));
       }
     };
     input.click();
   };
   function handleRemove(name: string) {
-    setAttachments((prev) => prev.filter((v) => v.filename !== name));
+    setAttachments((prev) => prev.filter((v) => v.id !== name));
+  }
+  function handlePaste(event: React.ClipboardEvent<HTMLFormElement>) {
+    const dataTransfer: ExtendedFile[] = [];
+    for (const file of Array.from(event.clipboardData.items)) {
+      if (/^image\//.test(file.type)) {
+        const binaryFile = file.getAsFile();
+        if (binaryFile)
+          dataTransfer.push({
+            file: binaryFile,
+            id: uuidv4(),
+          });
+      }
+    }
+    setAttachments((prev) => prev.concat(dataTransfer));
   }
   return (
     <>
-      <Form onSubmit={handleSubmit}>
+      <Form onPaste={handlePaste} onSubmit={handleSubmit}>
         <InputWrapper>
           <InputAttachments onRemove={handleRemove} attachments={attachments} />
           <Button onClick={handleUploadClick}>
             <AddFilledIcon />
           </Button>
+
           <Input
             disabled={!channel}
             placeholder={message}

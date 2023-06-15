@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { ATTACHMENTS_URI } from "@/constants";
 import Typography from "../Typography/Typography";
 import type { MessagesType } from "../../containers/ChatBody/MessagesWrapper/messages.interface";
 import type { FC } from "react";
@@ -50,6 +51,14 @@ const MessageHeader = styled.div`
 `;
 const AttachmentsWrapper = styled.div`
   display: flex;
+
+  img {
+    display: block;
+    object-fit: cover;
+    min-width: 100%;
+    min-height: 100%;
+    max-width: 100%;
+  }
 `;
 
 const TimeStamp = (props: { ts: number }) => {
@@ -97,8 +106,7 @@ const MessageItem: FC<MessagesType> = (props) => {
                   <img
                     loading="lazy"
                     key={v.filename}
-                    // TODO STORE URI IN ENV
-                    src={`http://localhost:3000/uploads/${v.filename}`}
+                    src={`${ATTACHMENTS_URI}${v.filename}`}
                   />
                 );
               })}

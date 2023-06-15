@@ -12,7 +12,9 @@ import "@utils/i18n.ts";
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
 const store = setupStore();
-
+// document.addEventListener("contextmenu", (e) => {
+//   e.preventDefault()
+// })
 createRoot(document.getElementById("root") as HTMLElement).render(
   <Provider store={store}>
     <App />

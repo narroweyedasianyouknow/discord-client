@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import API from "@/api";
-import AddFilledIcon from "../icons/AddFilledIcon";
-import { useAppSelector } from "../store";
-import { storeSelector } from "../store/storeSelector";
-import type { AttachmentType } from "../containers/ChatBody/MessagesWrapper/messages.interface";
+import AddFilledIcon from "../../icons/AddFilledIcon";
+import { useAppSelector } from "../../store";
+import { storeSelector } from "../../store/storeSelector";
+import InputAttachments from "./InputAttachments";
+import type { AttachmentType } from "../../containers/ChatBody/MessagesWrapper/messages.interface";
 
 const Form = styled.form`
   width: 100%;
@@ -24,8 +25,8 @@ const Input = styled.input`
   padding: 15px;
   font-size: 16px;
   font-weight: 400;
-  background-color: var(--bg-second);
 
+  background-color: var(--bg-second);
   grid-area: 2 / 2 / 3 / 3;
 
   &::placeholder {
@@ -41,6 +42,7 @@ const InputWrapper = styled.div`
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
 
+  background-color: var(--bg-second);
   align-items: center;
 `;
 const Button = styled.div`
@@ -54,26 +56,8 @@ const Button = styled.div`
   grid-area: 2 / 1 / 3 / 2;
   cursor: pointer;
 `;
-const FilesList = styled.div`
-  display: flex;
-  gap: 5px;
-  grid-area: 1 / 1 / 2 / 3;
-`;
-const Attachment = styled.div`
-  display: flex;
-  max-width: 200px;
-  max-height: 200px;
-  background-color: var(--header-primary);
-`;
-const ImageAttachment = styled.img`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  aspect-ratio: 1/1;
-  object-fit: contain;
-`;
 const { getActiveChannel } = storeSelector;
-const MessageInput = () => {
+const ChatInput = () => {
   const { t } = useTranslation();
   const channel = useAppSelector(getActiveChannel);
   const [attachments, setAttachments] = useState<AttachmentType[]>([]);
@@ -88,7 +72,7 @@ const MessageInput = () => {
     : "";
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (value.length > 0 && channel) {
+    if ((value.length > 0 || attachments[0]) && channel) {
       API.message().addMessage({
         channel_id: channel.id,
         nonce: +new Date(),
@@ -102,12 +86,14 @@ const MessageInput = () => {
         type: 0,
       });
       setValue("");
+      setAttachments([]);
     }
   };
 
   const handleUploadClick = () => {
     const input = document.createElement("input");
     input.type = "file";
+    input.accept = "image/*";
     input.multiple = true;
     input.onchange = (e) => {
       const elem = e.target as HTMLInputElement;
@@ -122,20 +108,14 @@ const MessageInput = () => {
     };
     input.click();
   };
+  function handleRemove(name: string) {
+    setAttachments((prev) => prev.filter((v) => v.filename !== name));
+  }
   return (
     <>
       <Form onSubmit={handleSubmit}>
         <InputWrapper>
-          <FilesList>
-            {attachments.map((v) => (
-              <Attachment>
-                <ImageAttachment
-                  key={v.filename}
-                  src={`http://localhost:3000/uploads/${v.filename}`}
-                />
-              </Attachment>
-            ))}
-          </FilesList>
+          <InputAttachments onRemove={handleRemove} attachments={attachments} />
           <Button onClick={handleUploadClick}>
             <AddFilledIcon />
           </Button>
@@ -151,4 +131,4 @@ const MessageInput = () => {
   );
 };
 
-export default MessageInput;
+export default ChatInput;

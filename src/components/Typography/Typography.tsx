@@ -23,6 +23,7 @@ export type ColorsListType =
   | "--sidebar-second"
   | "--divider-primary"
   | "--text-link"
+  | "--text-normal"
   | "--divider-body";
 
 const Typography = styled("span").withConfig({

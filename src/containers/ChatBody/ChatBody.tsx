@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import ChatInput from "../../components/ChatInput/ChatInput";
 import Header from "../../components/Header/Header";
-import MessageInput from "../../components/MessageInput";
 import Typography from "../../components/Typography/Typography";
 import HashtagIcon from "../../icons/HashtagIcon";
 import { storeSelector } from "../../store/storeSelector";
@@ -42,7 +42,7 @@ export default function ChatBody() {
         <MessagesListContainer>
           <MessageWrapper />
         </MessagesListContainer>
-        <MessageInput />
+        <ChatInput />
       </ChatWrapper>
     </>
   );

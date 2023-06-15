@@ -1,19 +1,16 @@
+import { BACKEND_URI } from "@/constants";
 import type {
   PersonType,
   ResponseGuildType,
 } from "@/containers/GuildsList/guild";
-import type {
-  IChat,
-} from "../components/ChannelsList/channels.interface";
+import type { IChat } from "../components/ChannelsList/channels.interface";
 import type {
   AttachmentType,
   MessagesType,
 } from "../containers/ChatBody/MessagesWrapper/messages.interface";
 
 class API {
-  protected static getURI() {
-    return "http://localhost:3000/";
-  }
+  protected static URI = `${BACKEND_URI}/`;
 
   protected useRequest<T>(
     method: string,
@@ -22,7 +19,7 @@ class API {
   ): Promise<T> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      const url = `${API.getURI()}${path}`;
+      const url = `${API.URI}${path}`;
       xhr.withCredentials = true;
       xhr.open(method, url);
       xhr.onload = () => resolve(JSON.parse(xhr.responseText));
@@ -77,7 +74,7 @@ class UploadAPI extends API {
 
         formData.append("file", file[0]);
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", `http://localhost:3000/avatar`, true);
+        xhr.open("POST", `${BACKEND_URI}/avatar`, true);
         xhr.onload = function (e: any) {
           try {
             res(JSON.parse(e.target.response).response);
@@ -104,7 +101,7 @@ class UploadAPI extends API {
           }
         }
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", `http://localhost:3000/avatar/files`, true);
+        xhr.open("POST", `${BACKEND_URI}/attachments/files`, true);
         xhr.onload = function (e: any) {
           try {
             res(JSON.parse(e.target.response).response);
@@ -140,7 +137,7 @@ class GuildsAPI extends API {
     );
   }
   joinToGuild(props: { guild_id: string }) {
-    return this.useRequest<{ response: ResponseGuildType }>(
+    return this.useRequest<{ response: ResponseGuildType | string }>(
       "POST",
       this.#links.JOIN_GUILD,
       props

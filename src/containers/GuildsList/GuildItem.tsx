@@ -1,6 +1,7 @@
 import Avatar from "boring-avatars";
 import React from "react";
 import styled, { keyframes } from "styled-components";
+import { AVATAR_URI } from "@/constants";
 import { useAppSelector } from "@/store";
 import guildsSelector from "./guildsSelector";
 import type { EntityId } from "@reduxjs/toolkit";
@@ -69,7 +70,7 @@ function GuildItem(props: GuildItemType) {
         {item?.icon ? (
           <UploadedAvatar
             $active={active}
-            src={`http://localhost:3000/uploads/${item?.icon}.png`}
+            src={`${AVATAR_URI}/${item?.icon}`}
           />
         ) : (
           <Avatar size={48} variant="beam" name={item?.name} />

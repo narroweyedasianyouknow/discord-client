@@ -70,7 +70,7 @@ function GuildItem(props: GuildItemType) {
         {item?.icon ? (
           <UploadedAvatar
             $active={active}
-            src={`${AVATAR_URI}/${item?.icon}`}
+            src={`${AVATAR_URI}${item?.icon}`}
           />
         ) : (
           <Avatar size={48} variant="beam" name={item?.name} />

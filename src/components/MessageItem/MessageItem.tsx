@@ -60,6 +60,16 @@ const AttachmentsWrapper = styled.div`
     max-width: 100%;
   }
 `;
+const ImageAttachment = styled.img<{
+  $height?: number;
+}>`
+  display: block;
+  object-fit: cover;
+  min-width: 100%;
+  min-height: 100%;
+  max-width: 100%;
+  height: ${(props) => props.height ?? "auto"};
+`;
 
 const TimeStamp = (props: { ts: number }) => {
   const { ts } = props;
@@ -103,8 +113,12 @@ const MessageItem: FC<MessagesType> = (props) => {
             <AttachmentsWrapper>
               {attachments.map((v) => {
                 return (
-                  <img
-                    height={v.height}
+                  <ImageAttachment
+                    $height={v.height}
+                    onLoad={(v) => {
+                      const element = v.target as HTMLImageElement;
+                      element.style.height = "auto";
+                    }}
                     loading="lazy"
                     key={v.filename}
                     src={`${ATTACHMENTS_URI}${v.filename}`}

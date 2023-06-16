@@ -24,7 +24,7 @@ const Input = styled("input")`
   border-radius: 3px;
   /* background: #1e1f22; */
   background-color: var(--input-background);
-  color: var(--text-normal);
+  color: var(--primary-600);
 `;
 
 const InputWrapper = styled("div")`

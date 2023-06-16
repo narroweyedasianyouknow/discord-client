@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import API from "@/api";
 import {
   createGuildAction,
   joinGuildAction,
@@ -49,8 +50,12 @@ export function DialogCreateServer({ onClose }: { onClose: () => void }) {
     input.onchange = (e) => {
       const element = e.target as HTMLInputElement;
       const file = element.files?.item(0);
-
-      console.log(file);
+      if (file)
+        API.upload()
+          .uploadAvatar({ file })
+          .then((res) => {
+            values.current.avatar = res.filename;
+          });
     };
   };
 
@@ -180,7 +185,7 @@ export function DialogJoinServer({ onClose }: { onClose: () => void }) {
 
 export function DialogAddServer(props: {
   onClose: () => void;
-  active: "create" | "join" | undefined
+  active: "create" | "join" | undefined;
 }) {
   const { active, onClose } = props;
   if (active === "join") {

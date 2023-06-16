@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import API from "@/api";
+import { dispatchCustomEvent } from "@/utils/events";
 import { uuidv4 } from "@/utils/socketEventListener";
 import AddFilledIcon from "../../icons/AddFilledIcon";
 import { useAppSelector } from "../../store";
@@ -78,21 +79,30 @@ const ChatInput = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if ((value.length > 0 || attachments[0]) && channel) {
-      const uploadedAttachments = attachments[0] ? await API.upload().uploadFiles({
-        files: attachments.map((v) => v.file),
-      }) : [];
-      API.message().addMessage({
-        channel_id: channel.id,
-        nonce: +new Date(),
-        content: value,
-        tts: false,
-        mention_everyone: false,
-        mentions: [],
-        mention_roles: [],
-        attachments: uploadedAttachments,
-        pinned: false,
-        type: 0,
-      });
+      const uploadedAttachments = attachments[0]
+        ? await API.upload().uploadFiles({
+            files: attachments.map((v) => v.file),
+          })
+        : [];
+      API.message()
+        .addMessage({
+          channel_id: channel.id,
+          nonce: +new Date(),
+          content: value,
+          tts: false,
+          mention_everyone: false,
+          mentions: [],
+          mention_roles: [],
+          attachments: uploadedAttachments,
+          pinned: false,
+          type: 0,
+        })
+        .then((res) => {
+          dispatchCustomEvent("scroll-to-bottom", {
+            top: window.innerHeight + 1000,
+            behavior: "smooth",
+          });
+        });
       setValue("");
       setAttachments([]);
     }

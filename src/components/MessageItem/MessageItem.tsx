@@ -104,6 +104,7 @@ const MessageItem: FC<MessagesType> = (props) => {
               {attachments.map((v) => {
                 return (
                   <img
+                    height={v.height}
                     loading="lazy"
                     key={v.filename}
                     src={`${ATTACHMENTS_URI}${v.filename}`}

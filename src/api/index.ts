@@ -67,27 +67,39 @@ class ChatsAPI extends API {
   }
 }
 class UploadAPI extends API {
-  uploadAvatar({ file }: { file: HTMLInputElement["files"] }) {
-    return new Promise((res: (data: any[]) => any, rej) => {
-      if (file && file[0]) {
-        const formData = new FormData();
+  uploadAvatar({ file }: { file: File }) {
+    return new Promise(
+      (
+        res: (data: {
+          description: string;
+          content_type: string;
+          filename: string;
+          size: number;
+          width: number;
+          height: number;
+        }) => any,
+        rej
+      ) => {
+        if (file) {
+          const formData = new FormData();
 
-        formData.append("file", file[0]);
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", `${BACKEND_URI}/avatar`, true);
-        xhr.onload = function (e: any) {
-          try {
-            res(JSON.parse(e.target.response).response);
-          } catch (e) {
-            console.log("e", e);
-            rej(e);
-          }
-        };
-        xhr.send(formData);
-      } else {
-        rej();
+          formData.append("file", file);
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", `${BACKEND_URI}/files/avatar`, true);
+          xhr.onload = function (e: any) {
+            try {
+              res(JSON.parse(e.target.response).response);
+            } catch (e) {
+              console.log("e", e);
+              rej(e);
+            }
+          };
+          xhr.send(formData);
+        } else {
+          rej();
+        }
       }
-    });
+    );
   }
   uploadFiles({ files }: { files: File[] }) {
     return new Promise((res: (data: AttachmentType[]) => void, rej) => {
@@ -98,7 +110,7 @@ class UploadAPI extends API {
           formData.append("files", file);
         }
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", `${BACKEND_URI}/attachments/files`, true);
+        xhr.open("POST", `${BACKEND_URI}/files/attachments`, true);
         xhr.onload = function (e: any) {
           try {
             res(JSON.parse(e.target.response).response);

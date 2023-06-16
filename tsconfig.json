@@ -25,7 +25,11 @@
       "@/*": ["./src/*"],
       "@api": ["./src/api/index"],
       "@store": ["./src/store/index"],
+      "@store/*": ["./src/store/*"],
+      "@icons/*": ["./src/icons/*"],
       "@utils/*": ["./src/utils/*"],
+      "@components/*": ["./src/components/*"],
+      "@containers/*": ["./src/containers/*"],
     }
   },
   "include": ["src"],

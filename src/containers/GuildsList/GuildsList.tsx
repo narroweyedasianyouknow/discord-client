@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import {
-  DialogAddServer,
-} from "@/components/Dialog/DialogCreateServer";
+import { DialogAddServer } from "@/components/Dialog/DialogCreateServer";
 import DialogWrapper from "@/components/Dialog/DialogWrapper";
-import AddFilledIcon from "@/icons/AddFilledIcon";
 import AddIcon from "@/icons/AddIcon";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { setActiveGuild } from "../ChatBody/MessagesWrapper/messagesActions";
@@ -25,9 +22,7 @@ const GuildsWrapper = styled("div")`
 const { getIds, getActiveGuildId } = guildsSelector;
 export default function GuildsList() {
   const dispatch = useAppDispatch();
-  const [showAddDialog, setShowAddDialog] = useState<
-    "create" | "join" | undefined
-  >(undefined);
+  const [showAddDialog, setShowAddDialog] = useState<boolean>(false);
   const ids = useAppSelector(getIds);
   const active = useAppSelector(getActiveGuildId);
   useEffect(() => {
@@ -39,14 +34,11 @@ export default function GuildsList() {
     },
     [dispatch]
   );
-  const handleShowCreateDialog = () => {
-    setShowAddDialog("create");
-  };
-  const handleShowJoinDialog = () => {
-    setShowAddDialog("join");
+  const handleShowDialog = () => {
+    setShowAddDialog(true);
   };
   const handleCloseDialog = () => {
-    setShowAddDialog(undefined);
+    setShowAddDialog(false);
   };
 
   return (
@@ -54,10 +46,10 @@ export default function GuildsList() {
       <GuildsWrapper>
         <DialogWrapper
           bgColor="--black-500"
-          active={!!showAddDialog}
+          active={showAddDialog}
           onClose={handleCloseDialog}
         >
-          <DialogAddServer active={showAddDialog} onClose={handleCloseDialog} />
+          <DialogAddServer onClose={handleCloseDialog} />
         </DialogWrapper>
 
         {ids.map((v) => (
@@ -68,11 +60,8 @@ export default function GuildsList() {
             id={v}
           />
         ))}
-        <GuildItemButton onClick={handleShowCreateDialog}>
+        <GuildItemButton onClick={handleShowDialog}>
           <AddIcon height={48} width={48} />
-        </GuildItemButton>
-        <GuildItemButton onClick={handleShowJoinDialog}>
-          <AddFilledIcon height={48} width={48} />
         </GuildItemButton>
       </GuildsWrapper>
     </>

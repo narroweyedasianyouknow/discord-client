@@ -1,11 +1,12 @@
+import ChannelsList from "@components/ChannelsList/ChannelsList";
+import Header from "@components/Header/Header";
+import Typography from "@components/Typography/Typography";
+import BoringAvatar from "boring-avatars";
 import styled from "styled-components";
 import { AVATAR_URI } from "@/constants";
 import guildsSelector from "@/containers/GuildsList/guildsSelector";
 import { useAppSelector } from "@/store";
 import { storeSelector } from "@/store/storeSelector";
-import ChannelsList from "../../components/ChannelsList/ChannelsList";
-import Header from "../../components/Header/Header";
-import Typography from "../../components/Typography/Typography";
 
 const SidebarWrapper = styled("div")`
   width: 100%;
@@ -55,11 +56,16 @@ export default function Sidebar() {
             borderBottom: "none",
             backgroundColor:
               "var(--bg-overlay-1,var(--background-secondary-alt))",
+            gap: "10px",
           }}
           type="body"
           padding="14px 16px"
         >
-          <Avatar src={`${AVATAR_URI}48/${profile?.avatar}.webp`} />
+          {profile?.avatar ? (
+            <Avatar src={`${AVATAR_URI}48/${profile?.avatar}.webp`} />
+          ) : (
+            <BoringAvatar name={profile?.username} variant="beam" />
+          )}
           <Typography fontWeight={700}>{profile?.username}</Typography>
         </Header>
       </SidebarWrapper>

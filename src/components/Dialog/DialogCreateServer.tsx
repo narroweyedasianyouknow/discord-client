@@ -201,13 +201,19 @@ export function DialogJoinServer({ onClose }: { onClose: () => void }) {
   );
 }
 
-export function DialogAddServer(props: {
-  onClose: () => void;
-  active: "create" | "join" | undefined;
-}) {
-  const { active, onClose } = props;
-  if (active === "join") {
-    return <DialogJoinServer onClose={onClose} />;
+export function DialogAddServer(props: { onClose: () => void }) {
+  const { onClose } = props;
+  const [dialogType, setDialogType] = useState<"create" | "join" | undefined>(
+    undefined
+  );
+
+  switch (dialogType) {
+    case "create":
+      return <DialogCreateServer onClose={onClose} />;
+    case "join":
+      return <DialogJoinServer onClose={onClose} />;
+
+    default:
+      return <></>;
   }
-  return <DialogCreateServer onClose={onClose} />;
 }

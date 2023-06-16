@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import API from "@/api";
 import { dispatchCustomEvent } from "@/utils/events";
 import { uuidv4 } from "@/utils/socketEventListener";
-import AddFilledIcon from "../../icons/AddFilledIcon";
-import { useAppSelector } from "../../store";
-import { storeSelector } from "../../store/storeSelector";
+import AddFilledIcon from "@icons/AddFilledIcon";
+import { useAppSelector } from "@store";
+import { storeSelector } from "@store/storeSelector";
 import InputAttachments from "./InputAttachments";
 
 const Form = styled.form`
+  max-height: 50vh;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 35px;
@@ -20,22 +21,32 @@ const Form = styled.form`
   margin: 16px 16px 20px;
 `;
 const Input = styled.input`
+  word-break: break-all;
   width: 100%;
   border: none;
   outline: none;
   padding: 15px;
   font-size: 16px;
   font-weight: 400;
+  font-family: inherit;
+  resize: none;
 
   background-color: var(--bg-second);
   grid-area: 2 / 2 / 3 / 3;
 
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
   &::placeholder {
     color: var(--header-light);
     user-select: none;
   }
 `;
 const InputWrapper = styled.div`
+  height: 100%;
   border-radius: 8px;
   overflow: hidden;
 
@@ -66,6 +77,9 @@ export type ExtendedFile = {
 const ChatInput = () => {
   const { t } = useTranslation();
   const channel = useAppSelector(getActiveChannel);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const [attachments, setAttachments] = useState<ExtendedFile[]>([]);
   const [value, setValue] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,13 +147,16 @@ const ChatInput = () => {
       }
     };
     input.click();
+    inputRef.current?.focus();
   };
+
   function handleRemove(name: string) {
     setAttachments((prev) => prev.filter((v) => v.id !== name));
   }
-  function handlePaste(event: React.ClipboardEvent<HTMLFormElement>) {
+  function handlePaste(evt: ClipboardEvent) {
     const dataTransfer: ExtendedFile[] = [];
-    for (const file of Array.from(event.clipboardData.items)) {
+    if (!evt.clipboardData) return false;
+    for (const file of Array.from(evt.clipboardData.items)) {
       if (/^image\//.test(file.type)) {
         const binaryFile = file.getAsFile();
         if (binaryFile)
@@ -150,10 +167,18 @@ const ChatInput = () => {
       }
     }
     setAttachments((prev) => prev.concat(dataTransfer));
+    inputRef.current?.focus();
   }
+  useEffect(() => {
+    window.addEventListener("paste", handlePaste);
+    return () => {
+      window.removeEventListener("paste", handlePaste);
+    };
+  }, []);
+
   return (
     <>
-      <Form onPaste={handlePaste} onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <InputWrapper>
           <InputAttachments onRemove={handleRemove} attachments={attachments} />
           <Button onClick={handleUploadClick}>
@@ -161,10 +186,10 @@ const ChatInput = () => {
           </Button>
 
           <Input
-            disabled={!channel}
+            ref={inputRef}
             placeholder={message}
-            value={value}
             onChange={handleChange}
+            value={value}
           />
         </InputWrapper>
       </Form>

@@ -1,10 +1,10 @@
+import Button from "@components/Button/Button";
+import Typography from "@components/Typography/Typography";
 import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useAppDispatch } from "@/store";
 import { loginAction, registrationAction } from "@/store/storeActions";
-import Button from "../../../components/Button/Button";
-import Typography from "../../../components/Typography/Typography";
 import type { ChangeEventHandler, FormEventHandler } from "react";
 const DialogInner = styled("form")`
   background: var(--bg-body);
@@ -174,7 +174,6 @@ export function DialogRegister({ onChangeType }: { onChangeType: () => void }) {
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const name = e.target.name as "email" | "password" | "username";
     const value = e.target.value;
-    console.log(values.current, name, values.current[name])
     values.current[name] = value;
   };
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {

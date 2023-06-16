@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { ATTACHMENTS_URI } from "@/constants";
 import Typography from "../Typography/Typography";
-import type { MessagesType } from "../../containers/ChatBody/MessagesWrapper/messages.interface";
+import type { MessagesType } from "@containers/ChatBody/MessagesWrapper/messages.interface";
 import type { FC } from "react";
 import "./MessageItem.scss";
 
@@ -113,16 +113,21 @@ const MessageItem: FC<MessagesType> = (props) => {
             <AttachmentsWrapper>
               {attachments.map((v) => {
                 return (
-                  <ImageAttachment
-                    $height={v.height}
-                    onLoad={(v) => {
-                      const element = v.target as HTMLImageElement;
-                      element.style.height = "auto";
-                    }}
-                    loading="lazy"
+                  <a
+                    target="_blank"
                     key={v.filename}
-                    src={`${ATTACHMENTS_URI}${v.filename}`}
-                  />
+                    href={`${ATTACHMENTS_URI}original/${v.filename}`}
+                  >
+                    <ImageAttachment
+                      $height={v.height}
+                      onLoad={(v) => {
+                        const element = v.target as HTMLImageElement;
+                        element.style.height = "auto";
+                      }}
+                      loading="lazy"
+                      src={`${ATTACHMENTS_URI}compressed/${v.filename}`}
+                    />
+                  </a>
                 );
               })}
             </AttachmentsWrapper>

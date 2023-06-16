@@ -1,18 +1,18 @@
+import ChatInput from "@components/ChatInput/ChatInput";
+import Header from "@components/Header/Header";
+import Typography from "@components/Typography/Typography";
+import HashtagIcon from "@icons/HashtagIcon";
+import { storeSelector } from "@store/storeSelector";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import ChatInput from "../../components/ChatInput/ChatInput";
-import Header from "../../components/Header/Header";
-import Typography from "../../components/Typography/Typography";
-import HashtagIcon from "../../icons/HashtagIcon";
-import { storeSelector } from "../../store/storeSelector";
 import MessageWrapper from "./MessagesWrapper/MessagesWrapper";
 
 const ChatWrapper = styled("div")`
   width: 100%;
   height: 100vh;
   display: grid;
-  grid-template-rows: min-content 1fr min-content;
+  grid-template-rows: min-content 9fr 1fr;
 `;
 const HeaderInner = styled("div")`
   display: flex;

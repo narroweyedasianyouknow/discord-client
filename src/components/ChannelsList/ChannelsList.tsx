@@ -1,6 +1,6 @@
+import { useAppSelector } from "@store";
 import { useMemo } from "react";
 import styled from "styled-components";
-import { useAppSelector } from "../../store";
 import ChannelListItem from "./ChannelListItem/ChannelListItem";
 import { channelsSelector } from "./channelsSelector";
 

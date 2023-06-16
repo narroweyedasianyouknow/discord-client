@@ -1,7 +1,7 @@
 import { useCallback, useRef } from "react";
 import styled from "styled-components";
-import { useAppDispatch } from "../../store";
-import { createChatAction } from "../../store/storeActions";
+import { useAppDispatch } from "@store";
+import { createChatAction } from "@store/storeActions";
 
 const ListFooterItems = styled.div`
   position: absolute;

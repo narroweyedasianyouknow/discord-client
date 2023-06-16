@@ -3,11 +3,11 @@ import type {
   PersonType,
   ResponseGuildType,
 } from "@/containers/GuildsList/guild";
-import type { IChat } from "../components/ChannelsList/channels.interface";
+import type { IChat } from "@components/ChannelsList/channels.interface";
 import type {
   AttachmentType,
   MessagesType,
-} from "../containers/ChatBody/MessagesWrapper/messages.interface";
+} from "@containers/ChatBody/MessagesWrapper/messages.interface";
 
 class API {
   protected static URI = `${BACKEND_URI}/`;

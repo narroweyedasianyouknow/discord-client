@@ -1,3 +1,4 @@
+import { useAppDispatch, useAppSelector } from "@store";
 import React, { useCallback } from "react";
 import styled from "styled-components";
 import Typography from "@/components/Typography/Typography";
@@ -6,7 +7,6 @@ import AddIcon from "@/icons/AddIcon";
 import ChevronIcon from "@/icons/ChevronIcon";
 import HashtagIcon from "@/icons/HashtagIcon";
 import { setActiveChannel } from "@/store/storeSlice";
-import { useAppDispatch, useAppSelector } from "../../../store";
 import { CHANNEL_TYPES_LIST } from "../channels.interface";
 import { channelsSelector } from "../channelsSelector";
 

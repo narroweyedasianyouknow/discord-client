@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import API from "@/api";
+import { InputConstructor } from "@/containers/Authorization/components/DialogLogin";
 import {
   createGuildAction,
   joinGuildAction,
@@ -9,7 +10,6 @@ import {
 import UploadIcon from "@/icons/UploadIcon";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { storeSelector } from "@/store/storeSelector";
-import { InputConstructor } from "../../containers/Authorization/components/DialogLogin";
 import Button from "../Button/Button";
 import Typography from "../Typography/Typography";
 import { DialogButtonsWrapper, Dialog, DialogInner } from "./DialogWrapper";
@@ -24,6 +24,16 @@ const UploadAvatarWrapper = styled.div`
   justify-content: center;
   margin-top: 24px;
 `;
+const AvatarButton = styled.div`
+  width: 80px;
+  height: 80px;
+`;
+const Avatar = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+`;
 
 export function DialogCreateServer({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
@@ -31,18 +41,18 @@ export function DialogCreateServer({ onClose }: { onClose: () => void }) {
   const dispatch = useAppDispatch();
 
   const login = useAppSelector(getProfileLogin);
+  const [avatar, setAvatar] = useState<File | undefined>(undefined);
   const values = useRef({
     name: t("dialog.default_server_name", {
       users: login,
     }),
-    avatar: "",
   });
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = e.target.value;
     values.current.name = value;
   };
-  const handleUploadClick: MouseEventHandler<SVGSVGElement> = (e) => {
+  const handleUploadClick: MouseEventHandler<HTMLImageElement> = (e) => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/png, image/jpeg, image/jpg, image/gif";
@@ -50,18 +60,20 @@ export function DialogCreateServer({ onClose }: { onClose: () => void }) {
     input.onchange = (e) => {
       const element = e.target as HTMLInputElement;
       const file = element.files?.item(0);
-      if (file)
-        API.upload()
-          .uploadAvatar({ file })
-          .then((res) => {
-            values.current.avatar = res.filename;
-          });
+      if (file) setAvatar(file);
     };
   };
 
-  const handleSubmit = () => {
-    dispatch(createGuildAction(values.current)).then(onClose);
+  const handleSubmit = async () => {
+    const icon = avatar
+      ? await API.upload().uploadAvatar({ file: avatar })
+      : undefined;
+
+    dispatch(
+      createGuildAction({ ...values.current, avatar: icon?.filename ?? "" })
+    ).then(onClose);
   };
+
   return (
     <>
       <Dialog sx={{ backgroundColor: "var(--modal-background)" }}>
@@ -90,7 +102,13 @@ export function DialogCreateServer({ onClose }: { onClose: () => void }) {
             {t("dialog.create_server_subtitle")}
           </Typography>
           <UploadAvatarWrapper>
-            <UploadIcon onClick={handleUploadClick} />
+            <AvatarButton onClick={handleUploadClick}>
+              {avatar ? (
+                <Avatar src={URL.createObjectURL(avatar)} />
+              ) : (
+                <UploadIcon />
+              )}
+            </AvatarButton>
           </UploadAvatarWrapper>
           <InputConstructor
             text={t("dialog.input.server_name")}

@@ -1,28 +1,29 @@
 import styled from "styled-components";
 import type { IHeader } from ".";
+import type { CSSObject } from "styled-components";
 
-const Wrapper = styled("div").withConfig({
-  shouldForwardProp: (props) =>
-    !["padding", "borderColor"].some((v) => v === props),
-})<{ padding: string; borderColor: "body" | "sidebar" }>`
+const Wrapper = styled("div")<{
+  $padding: string;
+  $type: "body" | "sidebar";
+  $sx: CSSObject;
+}>`
   display: flex;
   align-items: center;
 
   box-sizing: border-box;
   height: 49px;
   width: 100%;
-  padding: ${(props) => props.padding};
-  border-bottom: 1px solid
-    ${(props) =>
-      props?.borderColor === "body"
-        ? "var(--divider-body)"
-        : "var(--divider-primary)"};
+  padding: ${(props) => props.$padding};
+  border-bottom: 1px solid transparent;
+  border-color: ${(props) =>
+    props?.$type === "body" ? "var(--divider-body)" : "var(--divider-primary)"};
+  ${(props) => props.$sx};
 `;
 export default function Header(props: IHeader) {
-  const { children, padding, type = "body" } = props;
+  const { children, padding, type = "body", sx = {} } = props;
   return (
     <>
-      <Wrapper borderColor={type} padding={padding}>
+      <Wrapper $sx={sx} $type={type} $padding={padding}>
         {children}
       </Wrapper>
     </>

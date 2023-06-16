@@ -2,6 +2,8 @@ import React, { useCallback } from "react";
 import styled from "styled-components";
 import Typography from "@/components/Typography/Typography";
 import { fetchMessagesList } from "@/containers/ChatBody/MessagesWrapper/messagesActions";
+import AddIcon from "@/icons/AddIcon";
+import ChevronIcon from "@/icons/ChevronIcon";
 import HashtagIcon from "@/icons/HashtagIcon";
 import { setActiveChannel } from "@/store/storeSlice";
 import { useAppDispatch, useAppSelector } from "../../../store";
@@ -22,6 +24,20 @@ const ListItemWrapper = styled.div<{ $active: boolean }>`
   align-items: center;
   gap: 10px;
 `;
+const ChannelItem = styled.div`
+  display: flex;
+
+  padding-top: 16px;
+
+  height: fit-content;
+  width: 100%;
+  cursor: pointer;
+  user-select: none;
+  align-items: center;
+  svg {
+    color: var(--header-light);
+  }
+`;
 
 const { getChannelById } = channelsSelector;
 const ChannelListItem = (props: { id: string; active?: string }) => {
@@ -36,11 +52,24 @@ const ChannelListItem = (props: { id: string; active?: string }) => {
   switch (channel?.channel_type) {
     case CHANNEL_TYPES_LIST.GUILD_CATEGORY:
       return (
-        <React.Fragment>
-          <Typography color={"--header-light"} fontWeight={400}>
+        <ChannelItem>
+          <ChevronIcon />
+          <Typography
+            color={"--header-light"}
+            fontSize="12px"
+            fontWeight={600}
+            sx={{
+              letterSpacing: ".02em",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              textTransform: "uppercase",
+              flex: "1",
+            }}
+          >
             {channel?.name ?? ""}
           </Typography>
-        </React.Fragment>
+          <AddIcon />
+        </ChannelItem>
       );
 
     default:

@@ -25,6 +25,7 @@ const UploadAvatarWrapper = styled.div`
   margin-top: 24px;
 `;
 const AvatarButton = styled.div`
+  cursor: pointer;
   width: 80px;
   height: 80px;
 `;
@@ -204,7 +205,7 @@ export function DialogJoinServer({ onClose }: { onClose: () => void }) {
 export function DialogAddServer(props: { onClose: () => void }) {
   const { onClose } = props;
   const [dialogType, setDialogType] = useState<"create" | "join" | undefined>(
-    undefined
+    "create"
   );
 
   switch (dialogType) {

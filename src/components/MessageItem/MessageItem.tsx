@@ -51,24 +51,23 @@ const MessageHeader = styled.div`
 `;
 const AttachmentsWrapper = styled.div`
   display: flex;
-
-  img {
-    display: block;
-    object-fit: cover;
-    min-width: 100%;
-    min-height: 100%;
-    max-width: 100%;
-  }
 `;
-const ImageAttachment = styled.img<{
-  $height?: number;
+const ImageAttachment = styled.img.withConfig({
+  shouldForwardProp: (prop) => {
+    return !["dimensions"].includes(prop);
+  },
+})<{
+  dimensions?: {
+    width: number | "auto";
+    height: number | "auto";
+  };
 }>`
   display: block;
   object-fit: cover;
   min-width: 100%;
   min-height: 100%;
   max-width: 100%;
-  height: ${(props) => props.height ?? "auto"};
+  ${(props) => props.dimensions}
 `;
 
 const TimeStamp = (props: { ts: number }) => {
@@ -91,6 +90,33 @@ const TimeStamp = (props: { ts: number }) => {
     </div>
   );
 };
+function getResizeOption(dimensions: { width: number; height: number }) {
+  const { height, width } = dimensions;
+  const maxWidth = 550,
+    maxHeight = 350;
+  const resizeOptions: {
+    width: number | "auto";
+    height: number | "auto";
+  } = {
+    width: "auto",
+    height: "auto",
+  };
+
+  // CHECK IF WE HAVE DIMENSIONS
+  if (height && width) {
+    // RESIZE BY HEIGHT
+    if (height > width) {
+      resizeOptions.height = height > maxHeight ? maxHeight : height;
+    }
+    // RESIZE BY WIDTH
+    else {
+      resizeOptions.width = width > maxWidth ? maxWidth : width;
+    }
+  } else {
+    resizeOptions.width = maxHeight;
+  }
+  return resizeOptions;
+}
 const MessageItem: FC<MessagesType> = (props) => {
   const { content, author, nonce, attachments } = props;
 
@@ -116,16 +142,20 @@ const MessageItem: FC<MessagesType> = (props) => {
                   <a
                     target="_blank"
                     key={v.filename}
-                    href={`${ATTACHMENTS_URI}original/${v.filename}`}
+                    href={`${ATTACHMENTS_URI}${v.filename}`}
                   >
                     <ImageAttachment
-                      $height={v.height}
-                      onLoad={(v) => {
-                        const element = v.target as HTMLImageElement;
-                        element.style.height = "auto";
-                      }}
+                      dimensions={getResizeOption({
+                        height: v.height ?? 0,
+                        width: v.width ?? 0,
+                      })}
+                      // onLoad={(v) => {
+                      //   const element = v.target as HTMLImageElement;
+                      //   element.style.height = "auto";
+                      //   element.style.width = "auto";
+                      // }}
                       loading="lazy"
-                      src={`${ATTACHMENTS_URI}compressed/${v.filename}`}
+                      src={`${ATTACHMENTS_URI}${v.filename}?maxSize=550x350`}
                     />
                   </a>
                 );

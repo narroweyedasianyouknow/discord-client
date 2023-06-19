@@ -1,6 +1,9 @@
 import { io } from "socket.io-client";
 import { BACKEND_URI } from "@/constants";
+import { addMessageStore } from "@/containers/ChatBody/MessagesWrapper/messagesStorage";
+import store from "@/store";
 import type { MessagesType } from "@containers/ChatBody/MessagesWrapper/messages.interface";
+import type { Socket } from "socket.io-client";
 
 export function uuidv4(): string {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -18,21 +21,75 @@ function getCookie(name: string) {
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts?.pop()?.split(";").shift();
 }
-const socket = (addMessage: (message: MessagesType) => void) => {
-  const socket = io(BACKEND_URI, {
-    reconnectionDelay: 10000,
-    transports: ["websocket"],
-    auth: {
-      token: getCookie("token"),
-    },
-  });
+// const socket = () => {
+//   const socket = io(BACKEND_URI, {
+//     reconnectionDelay: 10000,
+//     transports: ["websocket"],
+//     query: {
+//       userId: getCookie("token"),
+//     },
+//     auth: {
+//       token: getCookie("token"),
+//     },
+//   });
 
-  socket.on("add-message", (data: MessagesType) => {
-    console.log(data);
-    addMessage(data);
-  });
-  return () => {
-    socket.close();
-  };
+//   socket.on("add-message", (data: MessagesType) => {
+//     console.log(data);
+//     dispatch(addMessageStore(data));
+//   });
+//   return () => {
+//     socket.close();
+//   };
+// };
+
+type MessageEvents = {
+  "add-message": (message: MessagesType) => void;
 };
-export default socket;
+type WebRtcEmits = {
+  offer: () => void;
+
+  answer: () => void;
+
+  iceCandidate: () => void;
+};
+type DefaultEventsMap = MessageEvents & WebRtcEmits;
+type DefaultEmitsMap = WebRtcEmits;
+export class SocketSingleton {
+  private static instance: SocketSingleton;
+  private readonly socket: Socket<DefaultEventsMap, DefaultEmitsMap>;
+
+  constructor() {
+    this.socket = io(BACKEND_URI, {
+      reconnectionDelay: 10000,
+      transports: ["websocket"],
+      auth: {
+        token: getCookie("token"),
+      },
+    });
+  }
+
+  public static getInstance(): SocketSingleton {
+    if (!SocketSingleton.instance) {
+      SocketSingleton.instance = new SocketSingleton();
+    }
+    return SocketSingleton.instance;
+  }
+
+  public getSocket(): Socket {
+    return this.socket;
+  }
+}
+export class SocketConfig {
+  private readonly socket = SocketSingleton.getInstance().getSocket();
+  private readonly dispatch = store.dispatch;
+
+  subscribe() {
+    this.socket.on("add-message", (message) => {
+      this.dispatch(addMessageStore(message));
+    });
+  }
+
+  close() {
+    return this.socket.close();
+  }
+}

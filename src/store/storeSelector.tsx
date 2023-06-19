@@ -24,6 +24,10 @@ export const storeSelector = {
     [(store: RootState) => store.store.profile?.username],
     (login) => login
   ),
+  getProfileId: createSelector(
+    [(store: RootState) => store.store.profile?.id],
+    (login) => login
+  ),
   getProfile: createSelector(
     [(store: RootState) => store.store.profile],
     (login) => login

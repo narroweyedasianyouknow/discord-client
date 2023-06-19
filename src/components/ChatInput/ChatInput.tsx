@@ -1,12 +1,12 @@
+import AddFilledIcon from "@icons/AddFilledIcon";
+import { useAppSelector } from "@store";
+import { storeSelector } from "@store/storeSelector";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import API from "@/api";
 import { dispatchCustomEvent } from "@/utils/events";
 import { uuidv4 } from "@/utils/socketEventListener";
-import AddFilledIcon from "@icons/AddFilledIcon";
-import { useAppSelector } from "@store";
-import { storeSelector } from "@store/storeSelector";
 import InputAttachments from "./InputAttachments";
 
 const Form = styled.form`
@@ -111,7 +111,7 @@ const ChatInput = () => {
           pinned: false,
           type: 0,
         })
-        .then((res) => {
+        .then(() => {
           dispatchCustomEvent("scroll-to-bottom", {
             top: window.innerHeight + 1000,
             behavior: "smooth",

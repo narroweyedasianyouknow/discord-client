@@ -1,18 +1,16 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import Loader from "./components/Loader/Loader";
 import Authorization from "./containers/Authorization/Authorization";
 import ChatBody from "./containers/ChatBody/ChatBody";
-import { addMessageStore } from "./containers/ChatBody/MessagesWrapper/messagesStorage";
 import GuildsList from "./containers/GuildsList/GuildsList";
 import Sidebar from "./containers/Sidebar/Sidebar";
 import { useAppDispatch, useAppSelector } from "./store";
 import { fetchProfile } from "./store/storeActions";
 import { storeSelector } from "./store/storeSelector";
-import socket from "./utils/socketEventListener";
-import type { MessagesType } from "./containers/ChatBody/MessagesWrapper/messages.interface";
+import { SocketConfig } from "./utils/socketEventListener";
 
-const { getProfileLogin, getServiceInitStatus } = storeSelector;
+const { getProfileId, getServiceInitStatus } = storeSelector;
 
 const AppWrapper = styled.div`
   display: grid;
@@ -22,29 +20,21 @@ const AppWrapper = styled.div`
 `;
 function App() {
   const dispatch = useAppDispatch();
-  const login = useAppSelector(getProfileLogin);
+  const user_id = useAppSelector(getProfileId);
   const { profile, guilds } = useAppSelector(getServiceInitStatus);
-  const addMessage = useCallback(
-    (message: MessagesType) => dispatch(addMessageStore(message)),
-    [dispatch]
-  );
+
   useEffect(() => {
     dispatch(fetchProfile());
   }, [dispatch]);
-  useEffect(() => {
-    const _socket = socket(addMessage);
-    return () => {
-      _socket();
-    };
-  }, [addMessage]);
 
-  if (!login) {
+  if (!user_id) {
     if (profile) return <Authorization />;
     return <Loader />;
   }
   return (
     <>
       <AppWrapper>
+        <InitSocket />
         <GuildsList />
         <Sidebar />
         <ChatBody />
@@ -52,4 +42,15 @@ function App() {
     </>
   );
 }
+const InitSocket = () => {
+  useEffect(() => {
+    const socket = new SocketConfig();
+    socket.subscribe();
+    return () => {
+      socket.close();
+    };
+  }, []);
+  return <></>;
+};
+
 export default App;

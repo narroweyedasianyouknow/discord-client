@@ -5,17 +5,18 @@ import isYesterday from "dayjs/plugin/isYesterday";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import App from "./App.tsx";
-import setupStore from "./store/index.ts";
+import store from "./store/index.ts";
 
 import "@utils/i18n.ts";
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
-const store = setupStore();
 // document.addEventListener("contextmenu", (e) => {
 //   e.preventDefault()
 // })
-createRoot(document.getElementById("root") as HTMLElement).render(
+const element = document.getElementById("root") as HTMLElement;
+const root = createRoot(element);
+root.render(
   <Provider store={store}>
     <App />
   </Provider>

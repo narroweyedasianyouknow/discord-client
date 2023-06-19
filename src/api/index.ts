@@ -22,7 +22,10 @@ class API {
       const url = `${API.URI}${path}`;
       xhr.withCredentials = true;
       xhr.open(method, url);
-      xhr.onload = () => resolve(JSON.parse(xhr.responseText));
+      xhr.onload = () => {
+        if (xhr.responseText) resolve(JSON.parse(xhr.responseText))
+        else resolve(xhr.response)
+      };
       xhr.onerror = () => reject(xhr.responseText);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
@@ -51,7 +54,7 @@ class API {
 
 class MessageAPI extends API {
   addMessage(props: Partial<MessagesType>) {
-    return this.useRequest<{ response: boolean }>("POST", "messages", props);
+    return this.useRequest("POST", "messages", props);
   }
   getMessages(props: { id: string }) {
     return this.useRequest<{ response: MessagesType[] }>(

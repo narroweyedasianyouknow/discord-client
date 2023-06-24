@@ -3,21 +3,23 @@ import guildsReducer from "@containers/GuildsList/guildsStorage";
 import channelsReducer from "@containers/Sidebar/ChannelsList/channelsStore";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
+
 import mainStoreReducer from "./storeSlice";
+
 import type { TypedUseSelectorHook } from "react-redux";
 
 const reducer = combineReducers({
-  messages: messageReducer,
-  store: mainStoreReducer,
-  guild: guildsReducer,
-  channels: channelsReducer,
+    messages: messageReducer,
+    store: mainStoreReducer,
+    guild: guildsReducer,
+    channels: channelsReducer,
 });
 const store = configureStore({
-  reducer: reducer,
-  devTools: {
-    name: "hell",
-  },
-})
+    reducer: reducer,
+    devTools: {
+        name: "hell",
+    },
+});
 
 export type RootState = ReturnType<typeof reducer>;
 export type Store = typeof store;

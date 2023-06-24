@@ -1,198 +1,248 @@
 import { BACKEND_URI } from "@/constants";
 import type {
-  PersonType,
-  ResponseGuildType,
+    PersonType,
+    ResponseGuildType,
 } from "@/containers/GuildsList/guild";
 import type { ChannelType } from "@/containers/Sidebar/ChannelsList/channels.interface";
+
 import type {
-  AttachmentType,
-  MessagesType,
+    AttachmentType,
+    MessagesType,
 } from "@containers/ChatBody/MessagesWrapper/messages.interface";
 
+type WithAbortRequest<T> = { promise: Promise<T>; cancel: () => void };
+type WithoutAbortRequest<T> = Promise<T>;
 class API {
-  protected static URI = `${BACKEND_URI}/`;
+    protected static URI = `${BACKEND_URI}/`;
 
-  protected useRequest<T>(
-    method: string,
-    path = "",
-    params?: unknown
-  ): Promise<T> {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      const url = `${API.URI}${path}`;
-      xhr.withCredentials = true;
-      xhr.open(method, url);
-      xhr.onload = () => {
-        if (xhr.responseText) resolve(JSON.parse(xhr.responseText));
-        else resolve(xhr.response);
-      };
-      xhr.onerror = () => reject(xhr.responseText);
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-      if (params)
-        xhr.send(params instanceof FormData ? params : JSON.stringify(params));
-      else xhr.send();
-    });
-  }
+    protected useRequest<ResponseObject, J extends boolean = false>(
+        method: string,
+        path = "",
+        params?: unknown,
+        withAbort = false
+    ): J extends true
+        ? {
+              promise: Promise<ResponseObject>;
+              cancel: () => void | undefined;
+          }
+        : Promise<ResponseObject> {
+        const url = `${API.URI}${path}`;
+        const abort: {
+            controller?: AbortController;
+            signal?: AbortSignal;
+        } = {
+            controller: undefined,
+            signal: undefined,
+        };
+        if (withAbort) {
+            abort.controller = new AbortController();
+            abort.signal = abort.controller.signal;
+        }
 
-  static message() {
-    return new MessageAPI();
-  }
-  static channel() {
-    return new ChannelAPI();
-  }
-  static guilds() {
-    return new GuildsAPI();
-  }
-  static profile() {
-    return new ProfileAPI();
-  }
-  static upload() {
-    return new UploadAPI();
-  }
+        const options: RequestInit = {
+            method,
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+            credentials: "include",
+            signal: abort.signal,
+        };
+
+        if (params) {
+            if (params instanceof FormData) options.body = params;
+            else options.body = JSON.stringify(params);
+        }
+
+        const request: Promise<ResponseObject> = fetch(url, options).then(
+            async (response) => {
+                if (!response.ok) {
+                    throw new Error((await response.json()).message);
+                }
+                return response.json();
+            }
+        );
+
+        if (withAbort) {
+            return {
+                promise: request,
+                cancel: () => abort.controller?.abort(),
+            } as J extends true
+                ? {
+                      promise: Promise<ResponseObject>;
+                      cancel: () => void;
+                  }
+                : never;
+        } else {
+            return request as J extends true ? never : Promise<ResponseObject>;
+        }
+    }
+
+    static message() {
+        return new MessageAPI();
+    }
+    static channel() {
+        return new ChannelAPI();
+    }
+    static guilds() {
+        return new GuildsAPI();
+    }
+    static profile() {
+        return new ProfileAPI();
+    }
+    static upload() {
+        return new UploadAPI();
+    }
 }
 
 class MessageAPI extends API {
-  addMessage(props: Partial<MessagesType>) {
-    return this.useRequest("POST", "messages", props);
-  }
-  getMessages(props: { id: string }) {
-    return this.useRequest<{ response: MessagesType[] }>(
-      "POST",
-      "messages/get",
-      props
-    );
-  }
+    addMessage(props: Partial<MessagesType>) {
+        return this.useRequest("POST", "messages", props, false);
+    }
+    getMessages(props: { id: string }) {
+        return this.useRequest<{ response: MessagesType[] }>(
+            "POST",
+            "messages/get",
+            props,
+            false
+        );
+    }
 }
 class ChannelAPI extends API {
-  links = {
-    CREATE_CHANNEL: "channels/create",
-  };
+    links = {
+        CREATE_CHANNEL: "channels/create",
+    };
 
-  createChannel(props: Partial<ChannelType>) {
-    return this.useRequest<{ response: ChannelType }>(
-      "POST",
-      this.links.CREATE_CHANNEL,
-      props
-    );
-  }
+    createChannel(props: Partial<ChannelType>) {
+        return this.useRequest<{ response: ChannelType }>(
+            "POST",
+            this.links.CREATE_CHANNEL,
+            props,
+            false
+        );
+    }
 }
 class UploadAPI extends API {
-  uploadAvatar({ file }: { file: File }) {
-    return new Promise(
-      (
-        res: (data: {
-          description: string;
-          content_type: string;
-          filename: string;
-          size: number;
-          width: number;
-          height: number;
-        }) => any,
-        rej
-      ) => {
-        if (file) {
-          const formData = new FormData();
+    uploadAvatar({ file }: { file: File }) {
+        return new Promise(
+            (
+                res: (data: {
+                    description: string;
+                    content_type: string;
+                    filename: string;
+                    size: number;
+                    width: number;
+                    height: number;
+                }) => any,
+                rej
+            ) => {
+                if (file) {
+                    const formData = new FormData();
 
-          formData.append("file", file);
-          const xhr = new XMLHttpRequest();
-          xhr.open("POST", `${BACKEND_URI}/files/avatar`, true);
-          xhr.onload = function (e: any) {
-            try {
-              res(JSON.parse(e.target.response).response);
-            } catch (e) {
-              console.log("e", e);
-              rej(e);
+                    formData.append("file", file);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open("POST", `${BACKEND_URI}/files/avatar`, true);
+                    xhr.onload = function (e: any) {
+                        try {
+                            res(JSON.parse(e.target.response).response);
+                        } catch (e) {
+                            console.log("e", e);
+                            rej(e);
+                        }
+                    };
+                    xhr.send(formData);
+                } else {
+                    rej();
+                }
             }
-          };
-          xhr.send(formData);
-        } else {
-          rej();
-        }
-      }
-    );
-  }
-  uploadFiles({ files }: { files: File[] }) {
-    return new Promise((res: (data: AttachmentType[]) => void, rej) => {
-      if (files && files[0]) {
-        const formData = new FormData();
+        );
+    }
+    uploadFiles({ files }: { files: File[] }) {
+        return new Promise((res: (data: AttachmentType[]) => void, rej) => {
+            if (files && files[0]) {
+                const formData = new FormData();
 
-        for (const file of files) {
-          formData.append("files", file);
-        }
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", `${BACKEND_URI}/files/attachments`, true);
-        xhr.onload = function (e: any) {
-          try {
-            res(JSON.parse(e.target.response).response);
-          } catch (e) {
-            console.log("e", e);
-            rej(e);
-          }
-        };
-        xhr.send(formData);
-      } else {
-        rej();
-      }
-    });
-  }
+                for (const file of files) {
+                    formData.append("files", file);
+                }
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", `${BACKEND_URI}/files/attachments`, true);
+                xhr.onload = function (e: any) {
+                    try {
+                        res(JSON.parse(e.target.response).response);
+                    } catch (e) {
+                        console.log("e", e);
+                        rej(e);
+                    }
+                };
+                xhr.send(formData);
+            } else {
+                rej();
+            }
+        });
+    }
 }
 class GuildsAPI extends API {
-  #links = {
-    GET_MY_GUILD: "guild/my",
-    GUILD_CREATE: "guild/create",
-    JOIN_GUILD: "guild/join",
-  };
+    #links = {
+        GET_MY_GUILD: "guild/my",
+        GUILD_CREATE: "guild/create",
+        JOIN_GUILD: "guild/join",
+    };
 
-  getMyGuilds() {
-    return this.useRequest<{
-      response: ResponseGuildType[];
-    }>("GET", this.#links.GET_MY_GUILD);
-  }
-  createGuild(props: { name: string; avatar?: string }) {
-    return this.useRequest<{ response: ResponseGuildType }>(
-      "POST",
-      this.#links.GUILD_CREATE,
-      props
-    );
-  }
-  joinToGuild(props: { guild_id: string }) {
-    return this.useRequest<{ response: ResponseGuildType | string }>(
-      "POST",
-      this.#links.JOIN_GUILD,
-      props
-    );
-  }
+    getMyGuilds() {
+        return this.useRequest<{
+            response: ResponseGuildType[];
+        }>("GET", this.#links.GET_MY_GUILD, undefined, false);
+    }
+    createGuild(props: { name: string; avatar?: string }) {
+        return this.useRequest<{ response: ResponseGuildType }>(
+            "POST",
+            this.#links.GUILD_CREATE,
+            props,
+            false
+        );
+    }
+    joinToGuild(props: { guild_id: string }) {
+        return this.useRequest<{ response: ResponseGuildType | string }>(
+            "POST",
+            this.#links.JOIN_GUILD,
+            props,
+            false
+        );
+    }
 }
 class ProfileAPI extends API {
-  #links = {
-    GET_MY_PROFILE: "person/me",
-    REGISTRATION: "person/create",
-    LOGIN: "person/login",
-  };
+    #links = {
+        GET_MY_PROFILE: "person/me",
+        REGISTRATION: "person/create",
+        LOGIN: "person/login",
+    };
 
-  get() {
-    return this.useRequest<{ response: PersonType }>(
-      "GET",
-      this.#links.GET_MY_PROFILE
-    );
-  }
-  login(args: { email?: string; username?: string; password: string }) {
-    return this.useRequest<{
-      response: PersonType;
-    }>("POST", this.#links.LOGIN, args);
-  }
-  register(args: {
-    username: string;
-    email: string;
-    password: string;
-    locale?: string;
-  }) {
-    return this.useRequest<{ response: PersonType }>(
-      "POST",
-      this.#links.REGISTRATION,
-      args
-    );
-  }
+    get() {
+        return this.useRequest<{ response: PersonType }>(
+            "GET",
+            this.#links.GET_MY_PROFILE,
+            undefined,
+            false
+        );
+    }
+    login(args: { email?: string; username?: string; password: string }) {
+        return this.useRequest<{
+            response: PersonType;
+        }>("POST", this.#links.LOGIN, args, false);
+    }
+    register(args: {
+        username: string;
+        email: string;
+        password: string;
+        locale?: string;
+    }) {
+        return this.useRequest<{ response: PersonType }>(
+            "POST",
+            this.#links.REGISTRATION,
+            args,
+            false
+        );
+    }
 }
 export default API;

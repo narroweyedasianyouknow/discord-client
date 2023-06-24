@@ -19,7 +19,8 @@ const ButtonWrapper = styled("button").withConfig({
 }>`
   border: none;
 
-  background-color: var(--brand-color);
+  color: var(--white-500);
+  background-color: var(--brand-experiment);
 
   margin-bottom: 8px;
 
@@ -44,7 +45,7 @@ const ButtonWrapper = styled("button").withConfig({
 
   transition: background-color 0.17s ease, color 0.17s ease;
   &:hover {
-    background-color: var(--brand-color-560);
+    background-color: var(--brand-560);
   }
   ${(props) => props.sx}
 `;

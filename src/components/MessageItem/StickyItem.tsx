@@ -14,7 +14,7 @@ const StickyItemBlock = styled("div").withConfig({
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  background: "var(--bg-body)",
+  background: "var(--bg-overlay-chat,var(--background-primary))",
   borderRadius: "12px",
   padding: "0.1rem 0.7rem",
   ...(!props.hidden
@@ -32,7 +32,7 @@ const HorizontalLine = styled("div")`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-second);
+  background: var(--background-modifier-accent);
   border-radius: 12px;
   top: 50%;
   height: 1px;
@@ -52,7 +52,7 @@ export default function StickyItem(props: { ts?: string }) {
           </Typography>
         </StickyItemBlock>
         <StickyItemBlock hidden={false}>
-          <Typography fontSize="12px" fontWeight={600} color="--header-light">
+          <Typography fontSize="12px" fontWeight={600} color="--text-muted">
             {ts ? dayjs(ts).format("DD MMM YYYY") : "New Message"}
           </Typography>
         </StickyItemBlock>

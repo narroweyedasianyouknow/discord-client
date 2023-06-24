@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { storeSelector } from "@/store/storeSelector";
 import Button from "../Button/Button";
 import Typography from "../Typography/Typography";
+import { DialogContent, DialogHeader } from "./Dialog";
 import { DialogButtonsWrapper, Dialog, DialogInner } from "./DialogWrapper";
 import type { ChangeEventHandler, MouseEventHandler } from "react";
 
@@ -78,7 +79,11 @@ export function DialogCreateServer({ onClose }: { onClose: () => void }) {
   return (
     <>
       <Dialog sx={{ backgroundColor: "var(--modal-background)" }}>
-        <DialogInner>
+        <DialogHeader
+          sx={{
+            justifyContent: "center",
+          }}
+        >
           <Typography
             sx={{
               textAlign: "center",
@@ -91,6 +96,8 @@ export function DialogCreateServer({ onClose }: { onClose: () => void }) {
           >
             {t("dialog.create_server_header")}
           </Typography>
+        </DialogHeader>
+        <DialogContent>
           <Typography
             sx={{
               textAlign: "center",
@@ -126,7 +133,7 @@ export function DialogCreateServer({ onClose }: { onClose: () => void }) {
               </Typography>
             }
           />
-        </DialogInner>
+        </DialogContent>
 
         <DialogButtonsWrapper>
           <Button onClick={handleSubmit}>{t("button.create")}</Button>

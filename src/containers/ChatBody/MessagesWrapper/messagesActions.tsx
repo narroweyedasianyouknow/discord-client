@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import API from "@/api";
-import type { ChannelType } from "@/components/ChannelsList/channels.interface";
-import { CHANNEL_TYPES_LIST } from "@/components/ChannelsList/channels.interface";
+import type { ChannelType } from "@/containers/Sidebar/ChannelsList/channels.interface";
+import { CHANNEL_TYPES_LIST } from "@/containers/Sidebar/ChannelsList/channels.interface";
 import type { RootState } from "@/store";
 import type { MessagesType } from "./messages.interface";
 

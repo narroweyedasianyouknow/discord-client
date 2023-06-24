@@ -32,4 +32,8 @@ export const storeSelector = {
     [(store: RootState) => store.store.profile],
     (login) => login
   ),
+  getActiveDialog: createSelector(
+    [(store: RootState) => store.store.activeModal],
+    (login) => login
+  ),
 };

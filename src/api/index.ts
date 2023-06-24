@@ -3,7 +3,7 @@ import type {
   PersonType,
   ResponseGuildType,
 } from "@/containers/GuildsList/guild";
-import type { IChat } from "@components/ChannelsList/channels.interface";
+import type { ChannelType } from "@/containers/Sidebar/ChannelsList/channels.interface";
 import type {
   AttachmentType,
   MessagesType,
@@ -23,8 +23,8 @@ class API {
       xhr.withCredentials = true;
       xhr.open(method, url);
       xhr.onload = () => {
-        if (xhr.responseText) resolve(JSON.parse(xhr.responseText))
-        else resolve(xhr.response)
+        if (xhr.responseText) resolve(JSON.parse(xhr.responseText));
+        else resolve(xhr.response);
       };
       xhr.onerror = () => reject(xhr.responseText);
       xhr.setRequestHeader("Content-Type", "application/json");
@@ -38,8 +38,8 @@ class API {
   static message() {
     return new MessageAPI();
   }
-  static chats() {
-    return new ChatsAPI();
+  static channel() {
+    return new ChannelAPI();
   }
   static guilds() {
     return new GuildsAPI();
@@ -64,9 +64,17 @@ class MessageAPI extends API {
     );
   }
 }
-class ChatsAPI extends API {
-  createChat(props: { title: string }) {
-    return this.useRequest<{ response: IChat }>("POST", "chats/create", props);
+class ChannelAPI extends API {
+  links = {
+    CREATE_CHANNEL: "channels/create",
+  };
+
+  createChannel(props: Partial<ChannelType>) {
+    return this.useRequest<{ response: ChannelType }>(
+      "POST",
+      this.links.CREATE_CHANNEL,
+      props
+    );
   }
 }
 class UploadAPI extends API {

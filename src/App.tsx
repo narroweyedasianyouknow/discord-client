@@ -15,7 +15,7 @@ const { getProfileId, getServiceInitStatus } = storeSelector;
 const AppWrapper = styled.div`
   display: grid;
   height: 100%;
-  background-color: var(--bg-body);
+  background-color: var(--background-tertiary);
   grid-template-columns: 72px 270px 1fr;
 `;
 function App() {

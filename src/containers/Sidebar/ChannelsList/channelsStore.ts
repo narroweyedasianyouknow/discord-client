@@ -4,6 +4,7 @@ import {
   fetchGuildsListAction,
   joinGuildAction,
 } from "@/containers/GuildsList/guildsActions";
+import { createChannelAction } from "./channelActions";
 import type { ChannelType } from "./channels.interface";
 
 const initialState: {
@@ -37,6 +38,17 @@ export const channelsStorage = createSlice({
         const { channels, ...guild } = action.payload;
 
         state[guild.id] = normalizeChannels(channels);
+      })
+      .addCase(createChannelAction.fulfilled, (state, action) => {
+        const payload = action.payload;
+        if (payload.guild_id) {
+          if (!(payload.guild_id in state)) {
+            state[payload.guild_id] = normalizeChannels([payload]);
+          } else {
+            state[payload.guild_id].ids.push(payload.id);
+            state[payload.guild_id].entities[payload.id] = payload;
+          }
+        }
       })
       .addCase(joinGuildAction.fulfilled, (state, action) => {
         const { channels, ...guild } = action.payload;

@@ -5,12 +5,11 @@ import type { ColorsListType } from "../Typography/Typography";
 import type { CSSObject } from "styled-components";
 
 export const DialogInner = styled("div")`
-  padding: 32px;
   padding-bottom: 0;
   max-width: 480px;
   width: 100%;
 `;
-const DialogContainer = styled("div").withConfig({
+export const DialogContainer = styled("div").withConfig({
   shouldForwardProp(propName) {
     return !["bgColor"].includes(propName);
   },
@@ -21,34 +20,40 @@ const DialogContainer = styled("div").withConfig({
   flexDirection: "column",
   display: "inline-flex",
   alignItems: "center",
-  backgroundColor: "var(--brand-color)",
+  // backgroundColor: bgColor ? bgColor : "var(--brand-560)",
   justifyContent: "center",
   borderRadius: "4px",
   zIndex: 1001,
 }));
 export const Dialog = styled("div").withConfig({
   shouldForwardProp(prop, defaultValidatorFn) {
-    return !['sx'].includes(prop)
+    return !["sx"].includes(prop);
   },
-})<{sx?: CSSObject}>`
+})<{ sx?: CSSObject }>`
   border-radius: 5px;
   overflow: hidden;
-  ${props => props.sx ?? {}}
+  ${(props) => props.sx ?? {}}
 `;
 
-export const DialogButtonsWrapper = styled("div")`
+export const DialogButtonsWrapper = styled("div").withConfig({
+  shouldForwardProp(prop, defaultValidatorFn) {
+    return !["sx"].includes(prop);
+  },
+})<{ sx?: CSSObject }>`
   background-color: var(--modal-footer-background);
   padding: 16px;
   max-width: 480px;
   width: 100%;
+  ${(props) => props.sx ?? {}}
 `;
 export default function DialogWrapper(props: {
   children: React.ReactNode;
   active: boolean;
   bgColor?: ColorsListType;
+  containerBgColor?: ColorsListType;
   onClose: () => void;
 }) {
-  const { children, bgColor, active, onClose } = props;
+  const { children, bgColor, containerBgColor, active, onClose } = props;
   const rootItem = useRef(
     document.getElementById("dialog-root") as HTMLElement
   );
@@ -74,7 +79,7 @@ export default function DialogWrapper(props: {
   return (
     <>
       <Portal active={active} root={rootItem.current}>
-        {active ? <DialogContainer>{children}</DialogContainer> : <></>}
+        {active ? children : <></>}
       </Portal>
     </>
   );

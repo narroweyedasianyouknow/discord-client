@@ -1,30 +1,7 @@
 import styled from "styled-components";
 import type { CSSObject } from "styled-components";
 
-export type ColorsListType =
-  | "transparent"
-  | "--modal-background"
-  | "--text-muted"
-  | "--blue-bg"
-  | "--black-500"
-  | "--brand-color"
-  | "--brand-color-560"
-  | "--bg-body"
-  | "--bg-chat-body"
-  | "--bg-guilds-body"
-  | "--text-100"
-  | "--text-90"
-  | "--text-80"
-  | "--header-light"
-  | "--header-dark"
-  | "--bg-second"
-  | "--bg-active"
-  | "--sidebar-primary"
-  | "--sidebar-second"
-  | "--divider-primary"
-  | "--text-link"
-  | "--text-normal"
-  | "--divider-body";
+export type ColorsListType = string;
 
 const Typography = styled("span").withConfig({
   shouldForwardProp: (props) =>
@@ -47,7 +24,7 @@ const Typography = styled("span").withConfig({
   asBlock?: boolean;
 }>(
   ({
-    color = "--text-100",
+    color = "inherit",
     fontSize = "16px",
     fontWeight = 400,
     textTransform = "none",

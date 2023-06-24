@@ -14,7 +14,7 @@ const GuildsWrapper = styled("div")`
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg-guilds-body);
+    background-color: var(--background-tertiary);
   padding: 10px 0;
   gap: 10px;
 `;
@@ -44,12 +44,11 @@ export default function GuildsList() {
   return (
     <>
       <GuildsWrapper>
-        <DialogWrapper
-          bgColor="--black-500"
-          active={showAddDialog}
-          onClose={handleCloseDialog}
-        >
+        <DialogWrapper active={showAddDialog} onClose={handleCloseDialog}>
+          <div className="theme-light">
+
           <DialogAddServer onClose={handleCloseDialog} />
+          </div>
         </DialogWrapper>
 
         {ids.map((v) => (

@@ -1,6 +1,6 @@
-import channelsReducer from "@components/ChannelsList/channelsStore";
 import messageReducer from "@containers/ChatBody/MessagesWrapper/messagesStorage";
 import guildsReducer from "@containers/GuildsList/guildsStorage";
+import channelsReducer from "@containers/Sidebar/ChannelsList/channelsStore";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import mainStoreReducer from "./storeSlice";

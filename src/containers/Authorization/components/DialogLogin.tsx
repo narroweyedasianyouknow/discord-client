@@ -7,7 +7,7 @@ import { useAppDispatch } from "@/store";
 import { loginAction, registrationAction } from "@/store/storeActions";
 import type { ChangeEventHandler, FormEventHandler } from "react";
 const DialogInner = styled("form")`
-  background: var(--bg-body);
+  background: var(--background-mobile-primary);
   border-radius: 4px;
   padding: 32px;
   min-width: 480px;
@@ -24,11 +24,12 @@ const Input = styled("input")`
   border-radius: 3px;
   /* background: #1e1f22; */
   background-color: var(--input-background);
-  color: var(--primary-600);
+  color: var(--text-normal);
 `;
 
 const InputWrapper = styled("div")`
   margin-top: 15px;
+  margin-bottom: 20px;
 `;
 const Header = styled("div")`
   text-align: center;
@@ -48,7 +49,7 @@ export function InputConstructor(props: {
       <Typography
         asBlock
         textTransform="uppercase"
-        color="--header-light"
+        color="--header-secondary"
         fontWeight={700}
         fontSize="14px"
       >

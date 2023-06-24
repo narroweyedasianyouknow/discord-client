@@ -1,17 +1,20 @@
-import ChannelsList from "@components/ChannelsList/ChannelsList";
 import Header from "@components/Header/Header";
 import Typography from "@components/Typography/Typography";
 import BoringAvatar from "boring-avatars";
 import styled from "styled-components";
+import { DialogCreateChannel } from "@/components/Dialog/DialogCreateChannel";
+import DialogWrapper from "@/components/Dialog/DialogWrapper";
 import { AVATAR_URI } from "@/constants";
 import guildsSelector from "@/containers/GuildsList/guildsSelector";
-import { useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { storeSelector } from "@/store/storeSelector";
+import { setActiveDialog } from "@/store/storeSlice";
+import ChannelsList from "./ChannelsList/ChannelsList";
 
 const SidebarWrapper = styled("div")`
   width: 100%;
   height: 100%;
-  background-color: var(--sidebar-primary);
+  background: var(--background-secondary);
 
   display: flex;
   flex-direction: column;
@@ -35,12 +38,29 @@ const Avatar = styled("img")`
 `;
 
 const { getActiveGuild } = guildsSelector;
-const { getProfile } = storeSelector;
+const { getProfile, getActiveDialog } = storeSelector;
 export default function Sidebar() {
+  const dispatch = useAppDispatch();
   const profile = useAppSelector(getProfile);
   const activeGuild = useAppSelector(getActiveGuild);
+  const activeDialog = useAppSelector(getActiveDialog);
+
+  function handleCloseDialog() {
+    dispatch(
+      setActiveDialog({
+        type: undefined,
+      })
+    );
+  }
   return (
     <>
+      <DialogWrapper active={!!activeDialog.type} onClose={handleCloseDialog}>
+        <DialogCreateChannel
+          parentId={activeDialog.data?.parentId}
+          guildId={String(activeGuild?.id)}
+          onClose={handleCloseDialog}
+        />
+      </DialogWrapper>
       <SidebarWrapper>
         <Header type="sidebar" padding="14px 16px">
           <Typography fontWeight={700}>

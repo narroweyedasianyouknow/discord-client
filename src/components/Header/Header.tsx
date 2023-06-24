@@ -14,9 +14,8 @@ const Wrapper = styled("div")<{
   height: 49px;
   width: 100%;
   padding: ${(props) => props.$padding};
-  border-bottom: 1px solid transparent;
-  border-color: ${(props) =>
-    props?.$type === "body" ? "var(--divider-body)" : "var(--divider-primary)"};
+
+  box-shadow: var(--elevation-low);
   ${(props) => props.$sx};
 `;
 export default function Header(props: IHeader) {

@@ -20,7 +20,7 @@ const BoxItem = styled.div`
 
   height: 10px;
   width: 10px;
-  background-color: var(--brand-color);
+  background-color: var(--brand-560);
 `;
 export default function Loader() {
   return (

@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CHANNEL_TYPES_LIST } from "@/components/ChannelsList/channels.interface";
 import { setActiveGuild } from "@/containers/ChatBody/MessagesWrapper/messagesActions";
 import type { PersonType } from "@/containers/GuildsList/guild";
 import {
@@ -7,6 +6,8 @@ import {
   fetchGuildsListAction,
   joinGuildAction,
 } from "@/containers/GuildsList/guildsActions";
+import { createChannelAction } from "@/containers/Sidebar/ChannelsList/channelActions";
+import { CHANNEL_TYPES_LIST } from "@/containers/Sidebar/ChannelsList/channels.interface";
 import { fetchProfile, loginAction, registrationAction } from "./storeActions";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
@@ -18,6 +19,10 @@ const initialState: {
     profile: boolean;
     guilds: boolean;
   };
+  activeModal: {
+    type: string | undefined;
+    data?: any;
+  };
 } = {
   profile: undefined,
   initialized: {
@@ -26,6 +31,10 @@ const initialState: {
   },
   activeChannel: undefined,
   activeGuild: undefined,
+  activeModal: {
+    data: undefined,
+    type: undefined,
+  },
 };
 export const mainStore = createSlice({
   name: "mainStore",
@@ -33,6 +42,12 @@ export const mainStore = createSlice({
   reducers: {
     setActiveChannel: (state, action: PayloadAction<string | undefined>) => {
       state.activeChannel = action.payload;
+    },
+    setActiveDialog: (
+      state,
+      action: PayloadAction<(typeof initialState)["activeModal"]>
+    ) => {
+      state.activeModal = action.payload;
     },
   },
   extraReducers: (builder) =>
@@ -76,9 +91,13 @@ export const mainStore = createSlice({
           (v) => v.channel_type === CHANNEL_TYPES_LIST.GUILD_TEXT
         );
         state.activeChannel = textChannel?.id;
+      })
+      .addCase(createChannelAction.fulfilled, (state, action) => {
+        const { id } = action.payload;
+        state.activeChannel = id;
       }),
 });
 
 const mainStoreReducer = mainStore.reducer;
-export const { setActiveChannel } = mainStore.actions;
+export const { setActiveChannel, setActiveDialog } = mainStore.actions;
 export default mainStoreReducer;

@@ -14,7 +14,7 @@ export default function Authorization() {
 
   return (
     <DialogWrapper
-      bgColor="--brand-color-560"
+      bgColor="--brand-560"
       onClose={() => {
         // действия при закрытии
       }}

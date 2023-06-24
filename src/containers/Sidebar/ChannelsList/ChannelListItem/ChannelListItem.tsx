@@ -5,7 +5,7 @@ import Typography from "@/components/Typography/Typography";
 import { fetchMessagesList } from "@/containers/ChatBody/MessagesWrapper/messagesActions";
 import AddIcon from "@/icons/AddIcon";
 import ChevronIcon from "@/icons/ChevronIcon";
-import HashtagIcon from "@/icons/HashtagIcon";
+import HashIcon from "@/icons/HashtagIcon";
 import { setActiveChannel } from "@/store/storeSlice";
 import { CHANNEL_TYPES_LIST } from "../channels.interface";
 import { channelsSelector } from "../channelsSelector";
@@ -16,13 +16,16 @@ const ListItemWrapper = styled.div<{ $active: boolean }>`
   height: fit-content;
   padding: 5px 10px;
   background-color: ${(props) =>
-    props.$active ? "var(--bg-active)" : "transparent"};
+    props.$active
+      ? "var(--bg-overlay-selected,var(--background-modifier-selected))"
+      : "transparent"};
   border-radius: 4px;
   width: 100%;
   cursor: pointer;
   user-select: none;
   align-items: center;
   gap: 10px;
+  color: var(--channels-default);
 `;
 const ChannelItem = styled.div`
   display: flex;
@@ -35,13 +38,17 @@ const ChannelItem = styled.div`
   user-select: none;
   align-items: center;
   svg {
-    color: var(--header-light);
+    color: var(--channels-default);
   }
 `;
 
 const { getChannelById } = channelsSelector;
-const ChannelListItem = (props: { id: string; active?: string }) => {
-  const { id, active } = props;
+const ChannelListItem = (props: {
+  id: string;
+  active?: string;
+  onAddChannel: (parent_id: string) => void;
+}) => {
+  const { id, active, onAddChannel } = props;
   const channel = useAppSelector((s) => getChannelById(s, id));
   const dispatch = useAppDispatch();
   const handleSelectChat = useCallback(() => {
@@ -55,7 +62,7 @@ const ChannelListItem = (props: { id: string; active?: string }) => {
         <ChannelItem>
           <ChevronIcon />
           <Typography
-            color={"--header-light"}
+            color={"--channels-default"}
             fontSize="12px"
             fontWeight={600}
             sx={{
@@ -68,7 +75,7 @@ const ChannelListItem = (props: { id: string; active?: string }) => {
           >
             {channel?.name ?? ""}
           </Typography>
-          <AddIcon />
+          <AddIcon onClick={() => onAddChannel(channel.id)} />
         </ChannelItem>
       );
 
@@ -79,9 +86,13 @@ const ChannelListItem = (props: { id: string; active?: string }) => {
             $active={active === channel?.id}
             onClick={handleSelectChat}
           >
-            <HashtagIcon width={24} height={24} />
+            <HashIcon width={24} height={24} />
             <Typography
-              color={active !== channel?.id ? "--header-light" : undefined}
+              color={
+                active !== channel?.id
+                  ? "--channels-default"
+                  : "--interactive-active"
+              }
               fontWeight={700}
             >
               {channel?.name ?? ""}

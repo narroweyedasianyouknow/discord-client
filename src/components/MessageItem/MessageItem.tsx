@@ -12,10 +12,12 @@ import "./MessageItem.scss";
 const MessageContainer = styled.div`
   display: grid;
   width: 100%;
+  height: min-content; 
   grid-template-columns: min-content auto;
   grid-template-rows: repeat(2, min-content);
   grid-column-gap: 10px;
   padding: 3px 15px;
+  
   &:hover {
     background: var(--bg-chat-body);
   }
@@ -36,14 +38,14 @@ const TextWrapper = styled.div`
   word-wrap: break-word;
   overflow: hidden;
   word-break: break-all;
-  color: var(--text-80);
+  color: var(--text-normal);
 `;
 const Time = styled.span`
   padding-left: 4px;
   font-size: 12px;
   font-weight: 400;
   line-height: 12px;
-  color: var(--header-light);
+  color: var(--text-muted);
 `;
 const MessageHeader = styled.div`
   display: flex;
@@ -127,7 +129,7 @@ const MessageItem: FC<MessagesType> = (props) => {
           <Avatar name={author?.username} variant="beam" />
         </div>
         <MessageHeader>
-          <Typography fontWeight={500} color="--text-90">
+          <Typography fontWeight={500} color="--header-primary">
             {author?.username}
           </Typography>
           <TimeStamp ts={+nonce} />

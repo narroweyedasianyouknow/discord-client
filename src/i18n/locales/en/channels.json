@@ -1,0 +1,7 @@
+{
+  "channel_name": "Channel name",
+  "type.text": "Text",
+  "type.voice": "Voice",
+  "type.text.description": "Send messages, images, GIFs, emoji, opinions, and puns",
+  "type.voice.description": "Hang out together with voice, video, and screen share"
+}

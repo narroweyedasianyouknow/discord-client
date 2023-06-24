@@ -31,7 +31,7 @@ const Input = styled.input`
   font-family: inherit;
   resize: none;
 
-  background-color: var(--bg-second);
+  background: var(--bg-overlay-3, var(--channeltextarea-background));
   grid-area: 2 / 2 / 3 / 3;
 
   -ms-overflow-style: none; /* IE and Edge */
@@ -41,7 +41,7 @@ const Input = styled.input`
     display: none;
   }
   &::placeholder {
-    color: var(--header-light);
+    color: var(--channel-text-area-placeholder);
     user-select: none;
   }
 `;
@@ -54,14 +54,13 @@ const InputWrapper = styled.div`
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
 
-  background-color: var(--bg-second);
   align-items: center;
 `;
 const Button = styled.div`
   height: 100%;
   width: 44px;
-  background-color: var(--bg-second);
   display: flex;
+  background: var(--bg-overlay-3, var(--channeltextarea-background));
   align-items: center;
   justify-content: center;
   margin-right: 1px;

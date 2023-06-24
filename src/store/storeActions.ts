@@ -35,5 +35,5 @@ export const createChatAction = createAsyncThunk<
     title: string;
   }
 >("chatsStorage/create", (payload) => {
-  return API.chats().createChat(payload);
+  return API.channel().createChannel(payload);
 });

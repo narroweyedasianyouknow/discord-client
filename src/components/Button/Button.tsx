@@ -9,19 +9,36 @@ interface IButton {
       type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
       onSubmit?: ButtonHTMLAttributes<HTMLButtonElement>["onSubmit"];
       onClick?: ButtonHTMLAttributes<HTMLButtonElement>["onClick"];
+      variant?: "primary" | "secondary";
       sx?: CSSObject;
 }
+
+const getColor = (color: IButton["variant"]) => {
+      switch (color) {
+            case "secondary":
+                  return {
+                        color: "var(--button-secondary-background)",
+                        hover: "var(--button-secondary-background-hover)",
+                  };
+
+            default:
+                  return {
+                        color: "var(--brand-experiment)",
+                        hover: "var(--brand-560)",
+                  };
+      }
+};
 const ButtonWrapper = styled("button").withConfig({
       shouldForwardProp(prop) {
-            return !["sx"].includes(prop);
+            return !["sx", "variant"].includes(prop);
       },
 })<{
       sx: CSSObject;
+      variant: IButton["variant"];
 }>`
       border: none;
 
       color: var(--white-500);
-      background-color: var(--brand-experiment);
 
       margin-bottom: 8px;
 
@@ -45,9 +62,15 @@ const ButtonWrapper = styled("button").withConfig({
       outline: none;
 
       transition: background-color 0.17s ease, color 0.17s ease;
-      &:hover {
-            background-color: var(--brand-560);
-      }
+      ${({ variant }) => {
+            const { color, hover } = getColor(variant);
+            return {
+                  backgroundColor: color,
+                  ":hover": {
+                        backgroundColor: hover,
+                  },
+            };
+      }}
       ${(props) => props.sx}
 `;
 const InnerContent = styled("div")`
@@ -58,12 +81,20 @@ const InnerContent = styled("div")`
       vertical-align: baseline;
 `;
 export default function Button(props: IButton) {
-      const { children, type, onSubmit, onClick, sx = {} } = props;
+      const {
+            children,
+            type,
+            onSubmit,
+            onClick,
+            sx = {},
+            variant = "primary",
+      } = props;
       return (
             <>
                   <ButtonWrapper
                         sx={sx}
                         type={type}
+                        variant={variant}
                         onClick={onClick}
                         onSubmit={onSubmit}
                   >

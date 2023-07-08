@@ -9,16 +9,16 @@ import mainStoreReducer from "./storeSlice";
 import type { TypedUseSelectorHook } from "react-redux";
 
 const reducer = combineReducers({
-    messages: messageReducer,
-    store: mainStoreReducer,
-    guild: guildsReducer,
-    channels: channelsReducer,
+      messages: messageReducer,
+      store: mainStoreReducer,
+      guild: guildsReducer,
+      channels: channelsReducer,
 });
 const store = configureStore({
-    reducer: reducer,
-    devTools: {
-        name: "hell",
-    },
+      reducer: reducer,
+      devTools: {
+            name: "hell",
+      },
 });
 
 export type RootState = ReturnType<typeof reducer>;

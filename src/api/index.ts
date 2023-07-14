@@ -59,7 +59,7 @@ class API {
                         if (!response.ok) {
                               throw new Error((await response.json()).message);
                         }
-                        
+
                         try {
                               return response.json();
                         } catch {
@@ -149,7 +149,7 @@ class InvitesAPI extends API {
                   false
             );
       }
-      useInvite( code: string ) {
+      useInvite(code: string) {
             return this.useRequest<ResponseGuildType | string>(
                   "POST",
                   this.links.USE.replace("{{code}}", code),
@@ -183,7 +183,7 @@ class UploadAPI extends API {
                               size: number;
                               width: number;
                               height: number;
-                        }) => any,
+                        }) => unknown,
                         rej
                   ) => {
                         if (file) {

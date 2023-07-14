@@ -79,7 +79,7 @@ html {
   margin: 0;
   box-sizing: border-box;
 }
-#dialog-root {
+#dialog-root, #popup-root {
   display: none;
 
   position: fixed;
@@ -94,8 +94,11 @@ html {
   width: 100vw;
   background-color: var(--black-500);
 }
-#dialog-root.open {
+#dialog-root.open, #popup-root.open {
   display: flex;
+}
+#popup-root {
+  background-color: unset;
 }
 .app {
   height: 100%;
@@ -154,7 +157,7 @@ html {
   left: 0;
   top: 0;
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .empty-space {
   flex: 1;

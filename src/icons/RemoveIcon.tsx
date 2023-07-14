@@ -2,7 +2,7 @@ const RemoveIcon = (props: React.SVGProps<SVGSVGElement>) => {
       return (
             <>
                   <svg
-                        aria-hidden="true"
+                        
                         role="img"
                         width="24"
                         height="24"

@@ -1,7 +1,7 @@
 const EyeIcon = (props: React.SVGProps<SVGSVGElement>) => {
       return (
             <svg
-                  aria-hidden="true"
+                  
                   role="img"
                   width="16"
                   height="16"

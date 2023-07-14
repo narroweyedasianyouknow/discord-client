@@ -8,7 +8,7 @@ const RadioIcon = (
       const { active, ...prop } = props;
       return (
             <svg
-                  aria-hidden="true"
+                  
                   role="img"
                   width="24"
                   height="24"

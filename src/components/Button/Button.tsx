@@ -28,7 +28,7 @@ const getColor = (color: IButton["variant"]) => {
                   };
       }
 };
-const ButtonWrapper = styled("button").withConfig({
+const ButtonWrapper = styled.button.withConfig({
       shouldForwardProp(prop) {
             return !["sx", "variant"].includes(prop);
       },

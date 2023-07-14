@@ -20,10 +20,10 @@ const Wrapper = styled("div")<{
       ${(props) => props.$sx};
 `;
 export default function Header(props: IHeader) {
-      const { children, padding, type = "body", sx = {} } = props;
+      const { children, padding, type = "body", sx = {}, onClick } = props;
       return (
             <>
-                  <Wrapper $sx={sx} $type={type} $padding={padding}>
+                  <Wrapper $sx={sx} $type={type} $padding={padding} onClick={onClick}>
                         {children}
                   </Wrapper>
             </>

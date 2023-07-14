@@ -2,7 +2,7 @@ const EditIcon = (props: React.SVGProps<SVGSVGElement>) => {
       return (
             <>
                   <svg
-                        aria-hidden="true"
+                        
                         role="img"
                         width="18"
                         height="18"

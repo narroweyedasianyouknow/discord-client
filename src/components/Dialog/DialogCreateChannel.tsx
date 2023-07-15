@@ -105,7 +105,7 @@ export function DialogCreateChannel(props: {
                   guild_id: guildId,
             };
             await dispatch(createChannelAction(item));
-            dispatch(setActiveDialog({ type: undefined }));
+            dispatch(setActiveDialog(undefined));
       }
       return (
             <>

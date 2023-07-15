@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
+import type { CSSObject } from "@/themes/colorsTypes";
+
 import type { ButtonHTMLAttributes } from "react";
-import type { CSSObject } from "styled-components";
 
 interface IButton {
       children: React.ReactNode;
@@ -28,13 +29,9 @@ const getColor = (color: IButton["variant"]) => {
                   };
       }
 };
-const ButtonWrapper = styled.button.withConfig({
-      shouldForwardProp(prop) {
-            return !["sx", "variant"].includes(prop);
-      },
-})<{
-      sx: CSSObject;
-      variant: IButton["variant"];
+const ButtonWrapper = styled.button<{
+      $sx: CSSObject;
+      $variant: IButton["variant"];
 }>`
       border: none;
 
@@ -62,8 +59,8 @@ const ButtonWrapper = styled.button.withConfig({
       outline: none;
 
       transition: background-color 0.17s ease, color 0.17s ease;
-      ${({ variant }) => {
-            const { color, hover } = getColor(variant);
+      ${({ $variant }) => {
+            const { color, hover } = getColor($variant);
             return {
                   backgroundColor: color,
                   ":hover": {
@@ -71,7 +68,7 @@ const ButtonWrapper = styled.button.withConfig({
                   },
             };
       }}
-      ${(props) => props.sx}
+      ${(props) => props.$sx}
 `;
 const InnerContent = styled("div")`
       margin: 0 auto;
@@ -92,9 +89,9 @@ export default function Button(props: IButton) {
       return (
             <>
                   <ButtonWrapper
-                        sx={sx}
+                        $sx={sx}
                         type={type}
-                        variant={variant}
+                        $variant={variant}
                         onClick={onClick}
                         onSubmit={onSubmit}
                   >

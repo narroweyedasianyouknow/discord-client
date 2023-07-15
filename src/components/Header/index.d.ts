@@ -1,5 +1,6 @@
+import type { CSSObject } from "@/themes/colorsTypes";
+
 import type { MouseEventHandler, ReactNode } from "react";
-import type { CSSObject } from "styled-components";
 
 export interface IHeader {
       children: ReactNode;

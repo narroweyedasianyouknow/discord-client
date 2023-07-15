@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
+import type { CSSObject } from "@/themes/colorsTypes";
+
 import type { FC } from "react";
-import type { CSSObject } from "styled-components";
 
 export const DialogHeader = styled.div.withConfig({
       shouldForwardProp: (prop) => !["sx"].includes(prop),

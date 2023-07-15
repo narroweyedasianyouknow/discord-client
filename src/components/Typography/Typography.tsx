@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
-import type { CSSObject } from "styled-components";
+import type { CSSObject, ColorsListType } from "@/themes/colorsTypes";
 
-export type ColorsListType = string;
 
 const Typography = styled("span").withConfig({
       shouldForwardProp: (props) =>
@@ -31,8 +30,8 @@ const Typography = styled("span").withConfig({
 }>(
       ({
             color = "inherit",
-            fontSize = "16px",
-            fontWeight = 400,
+            fontSize = "inherit",
+            fontWeight = "inherit",
             textTransform = "none",
             asBlock = false,
             backgroundColor = "transparent",

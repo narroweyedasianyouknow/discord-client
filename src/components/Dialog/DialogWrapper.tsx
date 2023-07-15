@@ -1,23 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
+import type { ColorsListType , CSSObject } from "@/themes/colorsTypes";
 import Portal from "@/utils/Portal";
 
-import type { ColorsListType } from "../Typography/Typography";
-import type { CSSObject } from "styled-components";
+
 
 export const DialogInner = styled("div")`
       padding-bottom: 0;
       max-width: 480px;
       width: 100%;
 `;
-export const DialogContainer = styled("div").withConfig({
-      shouldForwardProp(propName) {
-            return !["bgColor"].includes(propName);
-      },
-})<{
-      bgColor?: ColorsListType;
-}>(({ bgColor }) => ({
+export const DialogContainer = styled("div")({
       // height: "100%",
       flexDirection: "column",
       display: "inline-flex",
@@ -26,7 +20,7 @@ export const DialogContainer = styled("div").withConfig({
       justifyContent: "center",
       borderRadius: "4px",
       zIndex: 1001,
-}));
+});
 export const Dialog = styled("div").withConfig({
       shouldForwardProp(prop, defaultValidatorFn) {
             return !["sx"].includes(prop);

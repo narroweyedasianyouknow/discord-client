@@ -14,7 +14,15 @@ import { CHANNEL_TYPES_LIST } from "@/containers/Sidebar/ChannelsList/channels.i
 import { fetchProfile, loginAction, registrationAction } from "./storeActions";
 
 import type { PayloadAction } from "@reduxjs/toolkit";
-
+export type ActiveModalType =
+      | {
+              type: 'add-channel';
+              data: { parentId: string };
+        }
+      | {
+              type: 'invite-people';
+              data: undefined
+        }
 const initialState: {
       profile?: PersonType;
       activeChannel?: ChannelType["id"];
@@ -24,10 +32,7 @@ const initialState: {
             profile: boolean;
             guilds: boolean;
       };
-      activeModal: {
-            type: string | undefined;
-            data?: any;
-      };
+      activeModal: ActiveModalType | undefined;
 } = {
       profile: undefined,
       initialized: {
@@ -37,10 +42,7 @@ const initialState: {
       activeVoice: undefined,
       activeChannel: undefined,
       activeGuild: undefined,
-      activeModal: {
-            data: undefined,
-            type: undefined,
-      },
+      activeModal: undefined,
 };
 export const mainStore = createSlice({
       name: "mainStore",

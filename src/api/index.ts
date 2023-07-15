@@ -59,12 +59,10 @@ class API {
                         if (!response.ok) {
                               throw new Error((await response.json()).message);
                         }
-
-                        try {
+                        if (response.status !== 204) {
                               return response.json();
-                        } catch {
-                              return true;
                         }
+                        return null;
                   }
             );
 

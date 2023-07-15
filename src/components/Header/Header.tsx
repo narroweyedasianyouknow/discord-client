@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
+import type { CSSObject } from "@/themes/colorsTypes";
+
 import type { IHeader } from ".";
-import type { CSSObject } from "styled-components";
 
 const Wrapper = styled("div")<{
       $padding: string;

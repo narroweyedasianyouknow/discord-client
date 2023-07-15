@@ -9,6 +9,7 @@
       "button.continue": "Continue",
       "button.login": "Log In",
       "button.create": "Create",
+      "button.copy": "Copy",
       "register.create_account": "Create an account",
       "login.welcome_back": "Welcome back!",
       "login.we_glad_to_see_you_again": "We're so excited to see you again!",
@@ -29,5 +30,8 @@
       "dialog.create_a_sever": "Create a server",
       "dialog.create_a_sever_description": "Your server is where you and your friends hang out. Make yours and start talking.",
       "dialog.have_invite_already": "Have an invite already?",
-      "dialog.join_a_server": "Join a Server"
+      "dialog.join_a_server": "Join a Server",
+      "invite.friends_to_chat": "Invite friends to <0>{{name}}</0>",
+      "invite.edit_invite_link": "Edit invite link.",
+      "invite.invite_link_expires_in": "Your invite link expires in {{day}} days."
 }

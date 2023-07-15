@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Loader from "./components/Loader/Loader";
 import Authorization from "./containers/Authorization/Authorization";
 import ChatBody from "./containers/ChatBody/ChatBody";
+import Dialogs from "./containers/Dialogs/Dialogs";
 import GuildsList from "./containers/GuildsList/GuildsList";
 import Sidebar from "./containers/Sidebar/Sidebar";
 import { useAppDispatch, useAppSelector } from "./store";
@@ -39,6 +40,7 @@ function App() {
                         <GuildsList />
                         <Sidebar />
                         <ChatBody />
+                        <Dialogs />
                   </AppWrapper>
             </>
       );

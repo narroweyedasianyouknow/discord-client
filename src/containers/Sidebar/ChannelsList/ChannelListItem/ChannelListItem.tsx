@@ -7,7 +7,6 @@ import { fetchMessagesList } from "@/containers/ChatBody/MessagesWrapper/message
 import AddIcon from "@/icons/AddIcon";
 import ChevronIcon from "@/icons/ChevronIcon";
 import HashIcon from "@/icons/HashtagIcon";
-import { storeSelector } from "@/store/storeSelector";
 import { setActiveChannel, setActiveDialog } from "@/store/storeSlice";
 
 import { CHANNEL_TYPES_LIST } from "../channels.interface";
@@ -50,23 +49,23 @@ const ChannelItem = styled.div`
 `;
 
 const { getChannelById } = channelsSelector;
-const { getPeerConnection } = storeSelector;
 
 function GuildCategory(props: { channel: ChannelType }) {
       const { channel } = props;
       const dispatch = useAppDispatch();
       const onAddChannel = useCallback(
             (parent_id: string) => {
+                  if (!parent_id) return false;
                   dispatch(
                         setActiveDialog({
                               data: {
-                                    parentId: channel.parent_id,
+                                    parentId: parent_id,
                               },
                               type: "add-channel",
                         })
                   );
             },
-            [channel.parent_id, dispatch]
+            [dispatch]
       );
       return (
             <ChannelItem>

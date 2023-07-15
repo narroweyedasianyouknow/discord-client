@@ -50,8 +50,23 @@ export const messagesStorage = createSlice({
       initialState: initialState,
       reducers: {
             addMessageStore: (store, action: PayloadAction<MessagesType>) => {
-                  const payload = action.payload;
-                  addMessageToStorage(store, payload, true);
+                  const message = action.payload;
+                  const { channel_id, timestamp } = message;
+                  const time = dayjs(+timestamp)
+                        .set("h", 0)
+                        .set("m", 0)
+                        .set("s", 0)
+                        .set("millisecond", 0)
+                        .toISOString();
+
+                  if (!(channel_id in store))
+                        store[channel_id] = {
+                              [time]: [],
+                        };
+                  if (!(time in store[channel_id])) {
+                        store[channel_id][time] = [];
+                  }
+                  store[channel_id][time].push(message);
             },
       },
       extraReducers: (builder) =>

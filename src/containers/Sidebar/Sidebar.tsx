@@ -4,9 +4,6 @@ import BoringAvatar from "boring-avatars";
 import { useState } from "react";
 import styled from "styled-components";
 
-import API from "@/api";
-import { DialogCreateChannel } from "@/components/Dialog/DialogCreateChannel";
-import DialogWrapper from "@/components/Dialog/DialogWrapper";
 import type { IGroupItem } from "@/components/GroupItems/GroupItem";
 import GroupItemsList from "@/components/GroupItems/GroupItemsList";
 import Popup from "@/components/Popup/Popup";
@@ -55,23 +52,21 @@ const Avatar = styled("img")`
 `;
 
 const { getActiveGuild } = guildsSelector;
-const { getProfile, getActiveDialog } = storeSelector;
+const { getProfile } = storeSelector;
 export default function Sidebar() {
+      const dispatch = useAppDispatch();
       const popupItems: IGroupItem[] = [
             {
                   key: 1,
                   title: "Invite People",
                   icon: <AddPeople />,
                   onClick() {
-                        if (activeGuild) {
-                              API.invites()
-                                    .createInvite({
-                                          guild_id: activeGuild.id,
-                                    })
-                                    .then((res) => {
-                                          console.log(res);
-                                    });
-                        }
+                        dispatch(
+                              setActiveDialog({
+                                    type: "invite-people",
+                                    data: undefined,
+                              })
+                        );
                   },
             },
             {
@@ -101,20 +96,12 @@ export default function Sidebar() {
                   icon: <LeaveIcon />,
             },
       ];
-      const dispatch = useAppDispatch();
       const profile = useAppSelector(getProfile);
       const activeGuild = useAppSelector(getActiveGuild);
-      const activeDialog = useAppSelector(getActiveDialog);
       const [popupTarget, setPopupTarget] = useState<HTMLDivElement | null>(
             null
       );
-      function handleCloseDialog() {
-            dispatch(
-                  setActiveDialog({
-                        type: undefined,
-                  })
-            );
-      }
+
       const handleClickHeader: MouseEventHandler<HTMLDivElement> = (e) => {
             const element = e.currentTarget as HTMLDivElement;
             setPopupTarget((prev) => (prev ? null : element));
@@ -124,16 +111,6 @@ export default function Sidebar() {
       }
       return (
             <>
-                  <DialogWrapper
-                        active={!!activeDialog.type}
-                        onClose={handleCloseDialog}
-                  >
-                        <DialogCreateChannel
-                              parentId={activeDialog.data?.parentId}
-                              guildId={String(activeGuild?.id)}
-                              onClose={handleCloseDialog}
-                        />
-                  </DialogWrapper>
                   <SidebarWrapper>
                         <Header
                               onClick={handleClickHeader}

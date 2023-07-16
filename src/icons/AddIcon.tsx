@@ -11,7 +11,7 @@ const AddIcon = (props: React.SVGProps<SVGSVGElement>) => {
                   >
                         <path
                               d="M15 10H10V15H8V10H3V8H8V3H10V8H15V10Z"
-                              fill="#747F8D"
+                              fill="currentColor"
                         />
                   </svg>
             </>

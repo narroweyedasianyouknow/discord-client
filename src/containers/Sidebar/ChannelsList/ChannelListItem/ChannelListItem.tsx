@@ -34,6 +34,7 @@ export const ChannelItemWrapper = styled.div<{ $active: boolean }>`
       color: var(--channels-default);
 `;
 const ChannelItem = styled.div`
+      margin-left: 8px;
       display: flex;
 
       padding-top: 16px;

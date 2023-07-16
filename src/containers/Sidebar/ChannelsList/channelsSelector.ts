@@ -10,7 +10,7 @@ export const channelsSelector = {
                               ? store.channels[store.store.activeGuild]
                               : undefined,
             ],
-            (entity) => entity?.ids ?? []
+            (entity) => entity?.categories ?? {}
       ),
       getActiveId: createSelector(
             [

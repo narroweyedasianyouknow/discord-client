@@ -7,24 +7,35 @@ import {
 } from "@/containers/GuildsList/guildsActions";
 
 import { createChannelAction } from "./channelActions";
-
-import type { ChannelType } from "./channels.interface";
+import { CHANNEL_TYPES_LIST, type ChannelType } from "./channels.interface";
 
 const initialState: {
-      [name: string]: {
-            ids: string[];
+      [guild_id: string]: {
             entities: Record<string, ChannelType>;
+            categories: {
+                  [category_id: string]: string[];
+            };
       };
 } = {};
 const normalizeChannels = (channels: ChannelType[]) => {
-      const returnValue: Record<string, ChannelType> = {};
-      for (const channel of channels) {
-            returnValue[channel.id] = channel;
-      }
-      return {
-            entities: returnValue,
-            ids: channels.map((v) => v.id),
+      const returnValue: (typeof initialState)["1"] = {
+            entities: {},
+            categories: {},
       };
+      for (const channel of channels) {
+            if (channel.channel_type === CHANNEL_TYPES_LIST.GUILD_CATEGORY) {
+                  returnValue.categories[channel.id] = [];
+            }
+            if (!returnValue.categories[channel.parent_id ?? "0"]) {
+                  returnValue.categories[channel.parent_id ?? "0"] = [];
+            } else {
+                  returnValue.categories[channel.parent_id ?? "0"].push(
+                        channel.id
+                  );
+            }
+            returnValue.entities[channel.id] = channel;
+      }
+      return returnValue;
 };
 export const channelsStorage = createSlice({
       name: "channelsStorage",
@@ -50,9 +61,18 @@ export const channelsStorage = createSlice({
                                           [payload]
                                     );
                               } else {
-                                    state[payload.guild_id].ids.push(
-                                          payload.id
-                                    );
+                                    if (
+                                          payload.channel_type ===
+                                          CHANNEL_TYPES_LIST.GUILD_CATEGORY
+                                    ) {
+                                          state[payload.guild_id].categories[
+                                                payload.id
+                                          ] = [];
+                                    } else {
+                                          state[payload.guild_id].categories[
+                                                payload.parent_id ?? "0"
+                                          ].push(payload.id);
+                                    }
                                     state[payload.guild_id].entities[
                                           payload.id
                                     ] = payload;
